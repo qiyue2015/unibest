@@ -63,11 +63,7 @@ export const httpGet = <T>(url: string, query?: Record<string, any>) => {
  * @param query 请求query参数，post请求也支持query，很多微信接口都需要
  * @returns
  */
-export const httpPost = <T>(
-  url: string,
-  data?: Record<string, any>,
-  query?: Record<string, any>,
-) => {
+export const httpPost = <T>(url: string, data?: Record<string, any>, query?: Record<string, any>) => {
   return http<T>({
     url,
     query,

@@ -15,10 +15,7 @@ type IUseRequestOptions<T> = {
  * @param options.initialData 初始化数据，默认为undefined。
  * @returns 返回一个对象{loading, error, data, run}，包含请求的加载状态、错误信息、响应数据和手动触发请求的函数。
  */
-export default function useRequest<T>(
-  func: () => Promise<IResData<T>>,
-  options: IUseRequestOptions<T> = { immediate: false },
-) {
+export default function useRequest<T>(func: () => Promise<IResData<T>>, options: IUseRequestOptions<T> = { immediate: false }) {
   const loading = ref(false)
   const error = ref(false)
   const data = ref<T>(options.initialData)

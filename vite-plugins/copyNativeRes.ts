@@ -28,9 +28,7 @@ export function copyNativeRes() {
 
         // 执行文件夹复制
         await fs.copy(waitPath, buildPath)
-        console.log(
-          `[copyNativeRes] 成功将 nativeResources 目录中的资源移动到构建目录：${buildPath}`,
-        )
+        console.log(`[copyNativeRes] 成功将 nativeResources 目录中的资源移动到构建目录：${buildPath}`)
       } catch (error) {
         console.error(`[copyNativeRes] 复制资源失败：`, error)
       }

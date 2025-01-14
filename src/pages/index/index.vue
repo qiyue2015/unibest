@@ -8,10 +8,7 @@
 }
 </route>
 <template>
-  <view
-    class="bg-white overflow-hidden pt-2 px-4"
-    :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-  >
+  <view class="bg-white overflow-hidden pt-2 px-4" :style="{ marginTop: safeAreaInsets?.top + 'px' }">
     <view class="mt-12">
       <image src="/static/logo.svg" alt="" class="w-28 h-28 block mx-auto" />
     </view>
