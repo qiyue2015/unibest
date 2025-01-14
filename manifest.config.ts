@@ -23,6 +23,7 @@ export default defineManifestConfig({
   locale: VITE_FALLBACK_LOCALE, // 'zh-Hans'
   h5: {
     router: {
+      mode: 'history',
       base: VITE_APP_PUBLIC_BASE,
     },
   },
