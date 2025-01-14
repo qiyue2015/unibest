@@ -1,7 +1,7 @@
 // @see https://prettier.io/docs/en/options
 module.exports = {
   singleQuote: true,
-  printWidth: 100,
+  printWidth: 128,
   tabWidth: 2,
   useTabs: false,
   semi: false,
