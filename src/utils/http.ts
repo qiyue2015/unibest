@@ -1,4 +1,5 @@
 import { CustomRequestOptions } from '@/interceptors/request'
+import { useUserStore } from '@/store'
 
 export const http = <T>(options: CustomRequestOptions) => {
   // 1. 返回 Promise 对象
@@ -11,13 +12,12 @@ export const http = <T>(options: CustomRequestOptions) => {
       // #endif
       // 响应成功
       success(res) {
-        // 状态码 2xx，参考 axios 的设计
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          // 2.1 提取核心数据 res.data
-          resolve(res.data as IResData<T>)
-        } else if (res.statusCode === 401) {
-          // 401错误  -> 清理用户信息，跳转到登录页
-          // userStore.clearUserInfo()
+        const result = res.data as IResData<T>
+        if (result.errno === 0) {
+          resolve(result)
+        } else if (result.errno === 41009) {
+          const userStore = useUserStore()
+          userStore.clearUserInfo()
           // uni.navigateTo({ url: '/pages/login/login' })
           reject(res)
         } else {
@@ -25,7 +25,7 @@ export const http = <T>(options: CustomRequestOptions) => {
           !options.hideErrorToast &&
             uni.showToast({
               icon: 'none',
-              title: (res.data as IResData<T>).msg || '请求错误',
+              title: result.message || '请求错误',
             })
           reject(res)
         }
@@ -49,11 +49,7 @@ export const http = <T>(options: CustomRequestOptions) => {
  * @param header 请求头，默认为json格式
  * @returns
  */
-export const httpGet = <T>(
-  url: string,
-  query?: Record<string, any>,
-  header?: Record<string, any>,
-) => {
+export const httpGet = <T>(url: string, query?: Record<string, any>, header?: Record<string, any>) => {
   return http<T>({
     url,
     query,

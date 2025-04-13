@@ -66,11 +66,10 @@ const httpInterceptor = {
       platform, // 可选，与 uniapp 定义的平台一致，告诉后台来源
       ...options.header,
     }
-    // 3. 添加 token 请求头标识
+    // 3. 添加 sessionid
     const userStore = useUserStore()
-    const { token } = userStore.userInfo as unknown as IUserInfo
-    if (token) {
-      options.header.Authorization = `Bearer ${token}`
+    if (userStore?.sessionid) {
+      options.url += '&state=we7sid-' + userStore?.sessionid
     }
   },
 }

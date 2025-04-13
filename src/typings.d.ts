@@ -2,8 +2,8 @@
 
 declare global {
   type IResData<T> = {
-    code: number
-    msg: string
+    errno: number
+    message: string
     data: T
   }
 
