@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
+import { checkUpdate } from '@/utils/checkUpdate'
 
 onLaunch(() => {
   console.log('App Launch')
 })
 onShow(() => {
   console.log('App Show')
+  checkUpdate()
 })
 onHide(() => {
   console.log('App Hide')
