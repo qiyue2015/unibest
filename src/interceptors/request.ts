@@ -13,10 +13,27 @@ export type CustomRequestOptions = UniApp.RequestOptions & {
 // 请求基准地址
 const baseUrl = getEnvBaseUrl()
 
+// 为 url 添加 i 参数
+const rewriteUrl = (url: string): string => {
+  const [path, rawQuery = ''] = url.split('?')
+  const originalParams = qs.parse(rawQuery)
+
+  const uniacid = originalParams.i || import.meta.env.VITE_WX_UNIACID
+  delete originalParams.i // 确保不会重复
+
+  // 构造一个参数对象，i 在最前面
+  const orderedParams = { i: uniacid, ...originalParams }
+
+  const finalQuery = qs.stringify(orderedParams)
+
+  return `${path}?${finalQuery}`
+}
+
 // 拦截器配置
 const httpInterceptor = {
   // 拦截前触发
   invoke(options: CustomRequestOptions) {
+    options.url = rewriteUrl(options.url)
     // 接口请求支持通过 query 参数配置 queryString
     if (options.query) {
       const queryStr = qs.stringify(options.query)
