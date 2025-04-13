@@ -12,8 +12,8 @@ export default defineUniPages({
     autoscan: true,
     custom: {
       '^wd-(.*)': 'wot-design-uni/components/wd-$1/wd-$1.vue',
-      '^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)':
-        'z-paging/components/z-paging$1/z-paging$1.vue',
+      '^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)': 'z-paging/components/z-paging$1/z-paging$1.vue',
+      '^c-(.*)': '@/components/$1/index.vue', // 新增规则，匹配 src/components 下的组件
     },
   },
   tabBar: {

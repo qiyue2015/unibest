@@ -10,7 +10,8 @@
     "autoscan": true,
     "custom": {
       "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue",
-      "^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "z-paging/components/z-paging$1/z-paging$1.vue"
+      "^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)": "z-paging/components/z-paging$1/z-paging$1.vue",
+      "^c-(.*)": "@/components/$1/index.vue"
     }
   },
   "tabBar": {
@@ -43,7 +44,8 @@
       "type": "home",
       "style": {
         "navigationStyle": "custom",
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": false
       }
     },
     {
@@ -54,5 +56,639 @@
       }
     }
   ],
-  "subPackages": []
+  "subPackages": [
+    {
+      "root": "pages-feedback",
+      "pages": [
+        {
+          "path": "action-sheet/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "ActionSheet 上拉菜单",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "circle/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Circle 环形进度条",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "count-down/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "CountDown 倒计时",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "count-to/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "CountTo 数字滚动",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "drop-menu/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "DropMenu 下拉菜单",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "floating-panel/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "FloatingPanel 浮动面板",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "keyboard/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Keyboard 虚拟键盘",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "loading/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Loading 加载指示器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "message-box/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "MessageBox 弹框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "notice-bar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "NoticeBar 通知栏",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "notify/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Notify 消息通知",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "number-keyboard/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "NumberKeyboard 数字键盘",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "overlay/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Overlay 遮罩层",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "progress/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Progress 进度条",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "sort-button/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "SortButton 排序按钮",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "status-tip/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "StatusTip 缺省提示",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "swipe-action/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "SwipeAction 滑动操作",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "toast/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Toast 轻提示",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "tooltip/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Tooltip 文字提示",
+            "disableScroll": true
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages-form",
+      "pages": [
+        {
+          "path": "calendar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Calendar 日历",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "calendar-view/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "CalendarView 日历面板",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "checkbox/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Checkbox 复选框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "col-picker/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "ColPicker 多例选择器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "datetime-picker/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "DatetimePicker 日期时间选择器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "datetime-picker-view/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "DatetimePickerView 日期时间选择器面板",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "form/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Form 表单",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "input/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Input 输入框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "input-number/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "InputNumber 数字输入框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "password-input/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "PasswordInput 密码输入框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "picker/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Picker 选择器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "picker-view/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "PickerView 选择器面板",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "radio/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Radio 单选框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "rate/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Rate 评分",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "search/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Search 搜索框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "select-picker/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "SelectPicker 单复选选择器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "signature/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Signature 签名",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "slider/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Slider 滑块",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "switch/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Switch 开关",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "textarea/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Textarea 文本域",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "upload/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Upload 上传",
+            "disableScroll": true
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages-nav",
+      "pages": [
+        {
+          "path": "backtop/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Backtop 回到顶部",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "index-bar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "IndexBar 索引栏",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "navbar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Navbar 导航栏",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "pagination/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Pagination 分页",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "popover/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Popover 气泡弹出框",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "segmented/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Segmented 分段器",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "sidebar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Sidebar 侧边导航",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "tabbar/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Tabbar 标签栏",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "tabs/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Tabs 标签页",
+            "disableScroll": true
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages-show",
+      "pages": [
+        {
+          "path": "badge/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Badge 徽标",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "card/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Card 卡片",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "cell/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Cell 单元格",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "collapse/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Collapse 折叠面板",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "curtain/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Curtain 幕帘",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "divider/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Divider 分割线",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "gap/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Gap 间隔槽",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "grid/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Grid 宫格",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "img/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Img 图片",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "img-cropper/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "ImgCropper 图片裁剪",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "loadmore/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "LoadMore 加载更多",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "skeleton/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Skeleton 骨架屏",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "steps/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Steps 步骤条",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "sticky/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Sticky 吸顶布局",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "swiper/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Swiper 轮播图",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "table/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Table 表格",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "tag/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Tag 标签",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "watermark/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Watermark 水印",
+            "disableScroll": true
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages-widget",
+      "pages": [
+        {
+          "path": "button/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Button 按钮",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "config-provider/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "ConfigProvider 全局配置",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "fab/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Fab 悬浮按钮",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "icon/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Icon 图标",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "layout/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Layout 布局",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "popup/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Popup 弹出层",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "resize/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Resize 监听元素尺寸变化",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "text/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Text 文本",
+            "disableScroll": true
+          }
+        },
+        {
+          "path": "transition/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "Transition 动画",
+            "disableScroll": true
+          }
+        }
+      ]
+    }
+  ]
 }
