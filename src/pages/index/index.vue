@@ -1,38 +1,62 @@
+<!-- eslint-disable @typescript-eslint/ban-ts-comment -->
 <!-- 使用 type="home" 属性设置首页，其他页面不需要设置，默认为page；推荐使用json5，更强大，且允许注释 -->
 <route lang="json5" type="home">
 {
   style: {
     navigationStyle: 'custom',
     navigationBarTitleText: '首页',
+    // 页面不允许上下滑动
+    enablePullDownRefresh: false,
   },
 }
 </route>
-<template>
-  <view
-    class="bg-white overflow-hidden pt-2 px-4"
-    :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-  >
-    <view class="mt-12">
-      <image src="/static/logo.svg" alt="" class="w-28 h-28 block mx-auto" />
-    </view>
-    <view class="text-center text-4xl main-title-color mt-4">unibest</view>
-    <view class="text-center text-2xl mt-2 mb-8">最好用的 uniapp 开发模板</view>
 
-    <view class="text-justify max-w-100 m-auto text-4 indent mb-2">{{ description }}</view>
-    <view class="text-center mt-8">
-      当前平台是：
-      <text class="text-green-500">{{ PLATFORM.platform }}</text>
-    </view>
-    <view class="text-center mt-4">
-      模板分支是：
-      <text class="text-green-500">base</text>
+<template>
+  <view class="overflow-hidden" :style="{ marginTop: safeAreaInsets?.top + 'px' }">
+    <view class="page">
+      <view class="p-10">
+        <view class="text-xl mb-4">
+          Wot Design Uni
+          <text class="version">@{{ packageConfig.version }}</text>
+        </view>
+        <view class="text-sm text-justify">
+          Wot Design Uni 是一个基于Vue3+TS开发的uni-app组件库，提供70+高质量组件，支持暗黑模式、国际化和自定义主题。
+        </view>
+      </view>
+      <view class="px-4">
+        <block v-for="(item, index) in list" :key="index">
+          <view class="mb-2 rounded overflow-hidden">
+            <wd-cell-group :title="item.name" border>
+              <template #value>
+                <view class="w-5 h-5 overflow-hidden line-height-none">
+                  <image class="w-full h-full" :src="item.icon" />
+                </view>
+              </template>
+              <wd-cell
+                v-for="(page, idx) in item.pages"
+                :key="idx"
+                :title="page.name"
+                title-width="80%"
+                is-link
+                @click="handleClick(page.url)"
+              />
+            </wd-cell-group>
+          </view>
+        </block>
+      </view>
+      <view class="my-4">
+        <view class="text-center text-sm">当前平台是：{{ PLATFORM.platform }} 组件版本：v{{ packageConfig.version }}</view>
+      </view>
     </view>
   </view>
 </template>
 
 <script lang="ts" setup>
-import { TestEnum } from '@/typings'
+import homeList from '@/data/homeList.json'
 import PLATFORM from '@/utils/platform'
+// eslint-disable-next-line
+// @ts-ignore
+import packageConfig from '../../../package.json'
 
 defineOptions({
   name: 'Home',
@@ -40,19 +64,33 @@ defineOptions({
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
-const author = ref('菲鸽')
-const description = ref(
-  'unibest 是一个集成了多种工具和技术的 uniapp 开发模板，由 uniapp + Vue3 + Ts + Vite4 + UnoCss + UniUI + VSCode 构建，模板具有代码提示、自动格式化、统一配置、代码片段等功能，并内置了许多常用的基本组件和基本功能，让你编写 uniapp 拥有 best 体验。',
-)
+
+const imgModules: any = import.meta.glob('../../static/index/*.png', { eager: true })
+
+// 将驼峰式组件名转换为短横线式
+const toKebabCase = (name: string) => {
+  return name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+const list = homeList.map((item) => {
+  return {
+    ...item,
+    icon: imgModules['../../static/index/' + item.icon].default,
+    pages: item.pages.map((page) => {
+      return {
+        ...page,
+        url: '/pages-' + toKebabCase(item.id) + '/' + toKebabCase(page.id) + '/index',
+      }
+    }),
+  }
+})
+
+const handleClick = (url: string) => {
+  uni.navigateTo({ url })
+}
+
 // 测试 uni API 自动引入
 onLoad(() => {
-  console.log(author)
-  console.log(TestEnum.A)
+  console.log('onLoad')
 })
 </script>
-
-<style>
-.main-title-color {
-  color: #d14328;
-}
-</style>
