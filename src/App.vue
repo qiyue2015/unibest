@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
-import { useUserStore } from '@/store'
+import { useAppStore, useUserStore } from '@/store'
 import { checkUpdate } from '@/utils/checkUpdate'
 
+const appStore = useAppStore()
 const userStore = useUserStore()
 
 onLaunch(() => {
@@ -11,6 +12,8 @@ onLaunch(() => {
 })
 onShow(async () => {
   checkUpdate()
+
+  await appStore.getAccountInfo()
 
   if (userStore.isLogined) {
     try {
