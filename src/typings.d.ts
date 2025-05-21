@@ -18,6 +18,7 @@ declare global {
 
   type IUserInfo = {
     uid?: number
+    mobile?: string
     nickname?: string
     avatar?: string
     /** 微信的 openid，非微信没有这个字段 */
@@ -25,4 +26,4 @@ declare global {
   }
 }
 
-export {} // 防止模块污染
+export { } // 防止模块污染

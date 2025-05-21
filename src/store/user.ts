@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { authSessionCheck, authSessionOpenid } from '@/api/user'
+import { authSessionCheck, authSessionOpenid, getUserinfo } from '@/api/user'
 
-const initState = { uid: 0, nickname: '', avatar: '' }
+const initState = { uid: 0, mobile: undefined, nickname: '', avatar: '' }
 
 export const useUserStore = defineStore(
   'user',
@@ -10,6 +10,8 @@ export const useUserStore = defineStore(
     const sessionid = ref<string>(null)
 
     const userInfo = ref<IUserInfo>({ ...initState })
+
+    const isLogined = computed(() => !!sessionid.value && !!userInfo.value.mobile)
 
     const setSessionid = (val: string) => {
       sessionid.value = val
@@ -37,6 +39,20 @@ export const useUserStore = defineStore(
       }
     }
 
+    // 用户登陆
+    const login = async (phoneCode = null) => {
+      console.log('用户登陆 Phone code', phoneCode)
+      try {
+        wx.login({
+          success: async function ({ code }) {
+
+          }
+        })
+      } catch (error) {
+        clearUserInfo()
+      }
+    }
+
     // 获取用户信息
     const getUserInfo = async () => {
       try {
@@ -48,18 +64,23 @@ export const useUserStore = defineStore(
 
                 // 由于首次登录时 userinfo 为空，为了简化后续业务逻辑，这里重新获取一次
                 // 参考文档: https://wiki.w7.com/document/35/1026
-                if (!data?.userinfo) {
-                  data = (await authSessionOpenid(code)).data
-                }
+                // if (!data?.userinfo) {
+                //   data = (await authSessionOpenid(code)).data
+                // }
+
                 setSessionid(data.sessionid)
-                setUserInfo(data.userinfo)
+
+                // 从模块获取用户信息
+                const res = await getUserinfo()
+                setUserInfo(res.data || { ...initState })
+                // setUserInfo(data.userinfo)
               } catch {
                 clearUserInfo()
               }
             },
           })
         }
-        if (sessionid.value) {
+        if (isLogined.value) {
           checkSessionid() // 调用检查 sessionid 是否过期
         } else {
           loginFlow() // 调用登录
@@ -74,7 +95,6 @@ export const useUserStore = defineStore(
       userInfo.value = { ...initState }
     }
 
-    const isLogined = computed(() => !!sessionid.value)
 
     return {
       sessionid,
@@ -86,6 +106,7 @@ export const useUserStore = defineStore(
       reset,
       checkSessionid,
       getUserInfo,
+      login,
     }
   },
   {

@@ -6,6 +6,10 @@ export const http = <T>(options: CustomRequestOptions) => {
   return new Promise<IResData<T>>((resolve, reject) => {
     uni.request({
       ...options,
+      header: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       dataType: 'json',
       // #ifndef MP-WEIXIN
       responseType: 'json',

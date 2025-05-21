@@ -1,6 +1,6 @@
-<!-- 使用 type="home" 属性设置首页，其他页面不需要设置，默认为page；推荐使用json5，更强大，且允许注释 -->
-<route lang="json5" type="home">
+<route lang="json5">
 {
+  needLogin: true,
   style: {
     navigationStyle: 'custom',
     navigationBarTitleText: '首页',
@@ -31,11 +31,16 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from '@/store'
 import PLATFORM from '@/utils/platform'
+
+const userStore = useUserStore()
 
 defineOptions({
   name: 'Home',
 })
+
+console.log('当前平台:', userStore.isLogined)
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
