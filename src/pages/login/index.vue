@@ -49,7 +49,7 @@ onLoad(async (options) => {
 
 <template>
     <view class="w-full h-screen overflow-hidden flex items-end bg-image"
-        :style="{ backgroundImage: `url(${setting?.home_bg})` }">
+        :style="{ backgroundImage: setting?.home_bg ? `url(${setting?.home_bg})` : '' }">
         <view v-if="!loading" class="w-64 mb-20 mx-auto gap-lg">
             <!-- <wd-button
                 :loading="loading" 
@@ -83,7 +83,6 @@ onLoad(async (options) => {
 
 <style>
 .bg-image {
-    background-image: url('https://mp-img1.wifixc.com/images/93/2025/03/ZScVo8yrBdy0Z9GyGKO8oWcrZ85g5v.png');
     background-repeat: no-repeat;
     background-position: center bottom;
     background-size: cover;
