@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getModuleSetting } from '@/api/app';
 
-const initState = { uniacid: 0, name: '' }
+const initState = { uniacid: 0, name: '', bg_home:'' }
 
 export const useAppStore = defineStore(
   'app',

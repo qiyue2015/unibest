@@ -11,7 +11,7 @@ export const useUserStore = defineStore(
 
     const userInfo = ref<IUserInfo>({ ...initState })
 
-    const isLogined = computed(() => !!sessionid.value && !!userInfo.value.mobile)
+    const isLogined = computed(() => !!sessionid.value && userInfo.value.mobile)
 
     const setSessionid = (val: string) => {
       sessionid.value = val

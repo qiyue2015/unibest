@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { useAppStore, useUserStore } from '@/store'
-import { bindPhone } from '@/api/user'
+import { bindPhone, getUserinfo } from '@/api/user'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -21,11 +21,14 @@ const loading = ref(true)
 
 // 绑定手机号
 const onBindPhone = async ({ code }) => {
-    console.log('bindPhone', code)
     try {
-        wx.showLoading({  title: '登录中', mask: true })
+        wx.showLoading({ title: '登录中', mask: true })
         await bindPhone(code)
-        userStore.getUserInfo()
+        const { data } = await getUserinfo()
+        userStore.setUserInfo(data)
+        uni.switchTab({
+            url: '/pages/index/index'
+        });
     } finally {
         wx.hideLoading()
     }
@@ -37,7 +40,7 @@ const onLogin = async () => {
     });
 }
 
-onLoad(async (options) => {
+onLoad(async () => {
     try {
         loading.value = true
         await userStore.getUserInfo()
@@ -74,8 +77,7 @@ onLoad(async (options) => {
                 <wd-button :loading="loading" size="large" block @click="onLogin">进入</wd-button>
             </template>
             <template v-else>
-                <wd-button :loading="loading" open-type="getRealtimePhoneNumber" size="large" block
-                    @bindgetrealtimephonenumber="onBindPhone">授权登陆</wd-button>
+                <wd-button :loading="loading" open-type="getPhoneNumber" size="large" block @getphonenumber="onBindPhone">授权登陆</wd-button>
             </template>
         </view>
     </view>
