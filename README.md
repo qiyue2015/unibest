@@ -80,6 +80,20 @@
 - weixin平台：`pnpm build:mp-weixin`, 打包后的文件在 `dist/build/mp-weixin`，然后通过微信开发者工具导入，并点击右上角的“上传”按钮进行上传。
 - APP平台：`pnpm build:app`, 然后打开 `HBuilderX`，导入刚刚生成的`dist/build/app` 文件夹，选择发行 - APP云打包。
 
+## 🤔 如何贡献
+
+非常欢迎您的加入！提一个 [Issue](https://github.com/feige996/unibest/issues) 或者提交一个 [Pull Request](https://github.com/feige996/unibest/pulls)
+
+**Pull Request:**
+
+- 1. `Fork` 代码到自己的项目下，不要直接在仓库下建分支
+- 2. 请选择 `base` 分支，进行 `PR`
+- 3. 提交 `PR` 前请 `rebase`，确保 `commit` 记录的整洁
+- 4. 注意 `commit` 信息规范，要以 `type: 描述信息` 的形式填写，注意 `type` 得是下面规范之中的一个
+- 5. 示例 `commit 信息`：`fix: 修复样式问题`
+- 6. 可以使用项目中的 `pnpm cz` 进行 `commit` 提交
+- 7. 等待作者 `review` 通过后，即可合并
+
 ## 📄 License
 
 [MIT](https://opensource.org/license/mit/)
@@ -89,6 +103,6 @@ Copyright (c) 2025 菲鸽
 ## 捐赠
 
 <p align='center'>
-<img alt="special sponsor appwrite" src="./screenshots/pay-1.png" height="330" style="display:inline-block; height:330px;">
-<img alt="special sponsor appwrite" src="./screenshots/pay-2.png" height="330" style="display:inline-block; height:330px; margin-left:10px;">
+<img alt="special sponsor appwrite" src="https://oss.laf.run/ukw0y1-site/pay/wepay.png" height="330" style="display:inline-block; height:330px;">
+<img alt="special sponsor appwrite" src="https://oss.laf.run/ukw0y1-site/pay/alipay.jpg" height="330" style="display:inline-block; height:330px; margin-left:10px;">
 </p>
