@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
+import { useUserStore } from '@/store'
 import { checkUpdate } from '@/utils/checkUpdate'
-import { useUserStore } from '@/store/user'
 
 const userStore = useUserStore()
 
 onLaunch(() => {
   console.log('App Launch')
 })
-onShow(() => {
-  console.log('App Show')
-  useUserStore().getUserInfo()
+onShow(async () => {
   checkUpdate()
+
+  if (userStore.isLogined) {
+    try {
+      await wx.showLoading({ title: '加载中' })
+      await userStore.checkSessionid()
+    } finally {
+      await wx.hideLoading()
+    }
+  }
 })
 onHide(() => {
   console.log('App Hide')

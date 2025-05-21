@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { authSessionCheck, authSessionOpenid } from '@/service/index/user'
+import { authSessionCheck, authSessionOpenid } from '@/api/user'
 
 const initState = { uid: 0, nickname: '', avatar: '' }
 
@@ -51,7 +51,6 @@ export const useUserStore = defineStore(
                 if (!data?.userinfo) {
                   data = (await authSessionOpenid(code)).data
                 }
-
                 setSessionid(data.sessionid)
                 setUserInfo(data.userinfo)
               } catch {
