@@ -18,10 +18,10 @@ export default defineUniPages({
   },
   // 如果不需要tabBar，可以注释掉这个配置，或者直接删除
   tabBar: {
-    color: '#999999',
-    selectedColor: '#018d71',
+    color: '#444444',
+    selectedColor: '#00B386',
     backgroundColor: '#F8F8F8',
-    borderStyle: 'black',
+    borderStyle: 'white',
     height: '50px',
     fontSize: '10px',
     iconWidth: '24px',
@@ -34,9 +34,9 @@ export default defineUniPages({
         text: '首页',
       },
       {
-        iconPath: 'static/tabbar/example.png',
-        selectedIconPath: 'static/tabbar/exampleHL.png',
-        pagePath: 'pages/about/about',
+        iconPath: 'static/tabbar/ucenter.png',
+        selectedIconPath: 'static/tabbar/ucenterHL.png',
+        pagePath: 'pages/ucenter/index',
         text: '关于',
       },
     ],

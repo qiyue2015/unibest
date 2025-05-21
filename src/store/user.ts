@@ -11,7 +11,7 @@ export const useUserStore = defineStore(
 
     const userInfo = ref<IUserInfo>({ ...initState })
 
-    const isLogined = computed(() => !!sessionid.value && userInfo.value.mobile)
+    const isLogined = computed(() => !!sessionid.value && !!userInfo.value.mobile)
 
     const setSessionid = (val: string) => {
       sessionid.value = val
@@ -56,35 +56,32 @@ export const useUserStore = defineStore(
     // 获取用户信息
     const getUserInfo = async () => {
       try {
-        const loginFlow = () => {
+        if (isLogined.value) {
+          await checkSessionid() // 调用检查 sessionid 是否过期
+          return
+        }
+        // 登录流程
+        await new Promise((resolve, reject) => {
           wx.login({
             success: async function ({ code }) {
               try {
                 let { data } = await authSessionOpenid(code)
-
-                // 由于首次登录时 userinfo 为空，为了简化后续业务逻辑，这里重新获取一次
-                // 参考文档: https://wiki.w7.com/document/35/1026
-                // if (!data?.userinfo) {
-                //   data = (await authSessionOpenid(code)).data
-                // }
-
                 setSessionid(data.sessionid)
-
                 // 从模块获取用户信息
                 const res = await getUserinfo()
                 setUserInfo(res.data || { ...initState })
-                // setUserInfo(data.userinfo)
-              } catch {
+                resolve(null)
+              } catch (e) {
                 clearUserInfo()
+                reject(e)
               }
             },
+            fail: function (err) {
+              clearUserInfo()
+              reject(err)
+            }
           })
-        }
-        if (isLogined.value) {
-          checkSessionid() // 调用检查 sessionid 是否过期
-        } else {
-          loginFlow() // 调用登录
-        }
+        })
       } catch (error) {
         clearUserInfo()
       }

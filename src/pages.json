@@ -14,10 +14,10 @@
     }
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#018d71",
+    "color": "#444444",
+    "selectedColor": "#00B386",
     "backgroundColor": "#F8F8F8",
-    "borderStyle": "black",
+    "borderStyle": "white",
     "height": "50px",
     "fontSize": "10px",
     "iconWidth": "24px",
@@ -30,9 +30,9 @@
         "text": "首页"
       },
       {
-        "iconPath": "static/tabbar/example.png",
-        "selectedIconPath": "static/tabbar/exampleHL.png",
-        "pagePath": "pages/about/about",
+        "iconPath": "static/tabbar/ucenter.png",
+        "selectedIconPath": "static/tabbar/ucenterHL.png",
+        "pagePath": "pages/ucenter/index",
         "text": "关于"
       }
     ]
@@ -43,13 +43,6 @@
       "type": "home",
       "style": {
         "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/about/about",
-      "type": "page",
-      "style": {
-        "navigationBarTitleText": "关于"
       }
     },
     {
@@ -67,6 +60,15 @@
       "style": {
         "navigationStyle": "custom",
         "navigationBarTitleText": "用户登陆"
+      }
+    },
+    {
+      "path": "pages/ucenter/index",
+      "type": "page",
+      "needLogin": true,
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "我的"
       }
     }
   ],
