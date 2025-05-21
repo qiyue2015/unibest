@@ -16,7 +16,12 @@ export const http = <T>(options: CustomRequestOptions) => {
       // #endif
       // 响应成功
       success(res) {
-        const result = res.data as IResData<T>
+        let result = res.data as IResData<T>
+        // 如果 result.message 是个对象
+        if (typeof result.message === 'object') {
+          result = result.message
+        }
+        console.log('http', result)
         if (result.errno === 0) {
           resolve(result)
         } else if (result.errno === 41009) {
