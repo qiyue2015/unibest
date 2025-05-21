@@ -37,7 +37,7 @@ export default defineUniPages({
         iconPath: 'static/tabbar/ucenter.png',
         selectedIconPath: 'static/tabbar/ucenterHL.png',
         pagePath: 'pages/ucenter/index',
-        text: '关于',
+        text: '我的',
       },
     ],
   },

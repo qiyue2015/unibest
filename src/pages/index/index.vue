@@ -2,14 +2,17 @@
 {
   needLogin: true,
   style: {
-    navigationStyle: 'custom',
-    navigationBarTitleText: '首页',
+    // navigationStyle: 'custom',
+    navigationBarTitleText: '昭觉县移风易俗',
   },
 }
 </route>
 <template>
   <view class="bg-white overflow-hidden pt-2 px-4">
-    sdf
+    <view class="flex flex-row gap-4">
+      <view>我要留言</view>
+      <view>我要写信</view>
+    </view>>
   </view>
 </template>
 

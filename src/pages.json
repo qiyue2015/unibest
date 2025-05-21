@@ -33,7 +33,7 @@
         "iconPath": "static/tabbar/ucenter.png",
         "selectedIconPath": "static/tabbar/ucenterHL.png",
         "pagePath": "pages/ucenter/index",
-        "text": "关于"
+        "text": "我的"
       }
     ]
   },
@@ -50,8 +50,7 @@
       "type": "page",
       "needLogin": true,
       "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "昭觉县移风易俗"
       }
     },
     {
@@ -67,8 +66,7 @@
       "type": "page",
       "needLogin": true,
       "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "昭觉县移风易俗"
       }
     }
   ],
