@@ -21,7 +21,6 @@ export const http = <T>(options: CustomRequestOptions) => {
         if (typeof result.message === 'object') {
           result = result.message
         }
-        console.log('http', result)
         if (result.errno === 0) {
           resolve(result)
         } else if (result.errno === 41009) {
