@@ -29,6 +29,8 @@ onHide(() => {
 </script>
 
 <style lang="scss">
+@import '@/style/index.scss';
+
 body,
 page {
   background-color: #f5f5f5;
