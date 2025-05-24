@@ -10,26 +10,30 @@ const userStore = useUserStore()
 onLaunch(() => {
   console.log('App Launch')
 })
+
 onShow(async () => {
-  checkUpdate()
-
-  await appStore.getAccountInfo()
-
-  if (userStore.isLogined) {
-    try {
-      await wx.showLoading({ title: '加载中' })
+  // #ifdef MP-WEIXIN
+    // 检查 sessionid
+    if (userStore.isLogined) {
       await userStore.checkSessionid()
-    } finally {
-      await wx.hideLoading()
     }
-  }
+
+    // 版本更新检查
+    checkUpdate()
+  // #endif
 })
+
 onHide(() => {
   console.log('App Hide')
 })
 </script>
 
 <style lang="scss">
+body,
+page {
+  background-color: #f5f5f5;
+}
+
 /* stylelint-disable selector-type-no-unknown */
 button::after {
   border: none;
