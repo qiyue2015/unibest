@@ -1,9 +1,9 @@
 <route lang="json5">
-    {
-      style: {
-        navigationBarTitleText: '用户登陆',
-      }
-    }
+{
+  style: {
+    navigationBarTitleText: '用户登陆',
+  },
+}
 </route>
 
 <script lang="ts" setup>
@@ -15,7 +15,25 @@ const toast = useToast()
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 
-const loading = ref(true)
+// 用户登录
+const onLogin = async () => {
+  try {
+    toast.loading({ msg: '加载中', duration: 0 })
+    userStore.getUserInfo().then(() => {
+      toast.success({
+        msg: '登录成功',
+        duration: 1000,
+        direction: 'vertical',
+        position: 'middle',
+        closed: () => {
+          uni.switchTab({ url: '/pages/index/index' })
+        },
+      })
+    })
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+  }
+}
 
 // 绑定手机号
 const onBindPhone = async ({ code }) => {
@@ -61,27 +79,6 @@ const onPrivacyPolicy = () => {
     url: '/pages-sub/privacy/index',
   })
 }
-
-onLoad(async () => {
-  toast.loading({
-    msg: '加载中',
-    duration: 0,
-    direction: 'vertical',
-    position: 'middle',
-  })
-  await userStore.getUserInfo()
-  if (userStore.userInfo.mobile) {
-    toast.success({
-      msg: '登录成功',
-      duration: 1000,
-      direction: 'vertical',
-      position: 'middle',
-      closed: () => {
-        uni.switchTab({ url: '/pages/index/index' })
-      },
-    })
-  }
-})
 </script>
 
 <template>
@@ -92,10 +89,14 @@ onLoad(async () => {
     </view>
     <view class="w-full">
       <view class="mx-10">
-          <!-- <wd-button open-type="getPhoneNumber" size="large" block @getphonenumber="onBindPhone">一键授权登录</wd-button> -->
+        <block v-if="userInfo?.mobile">
+          <wd-button size="large" block @click="onLogin">登录</wd-button>
+        </block>
+        <block v-else>
           <button type="primary" open-type="getRealtimePhoneNumber" @getrealtimephonenumber="onGetRealtimePhone">
             一键授权登录
           </button>
+        </block>
       </view>
     </view>
     <view class="flex items-center text-size-xs text-gray-400 mt-4">

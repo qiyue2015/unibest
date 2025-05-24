@@ -18,39 +18,13 @@ export const useUserStore = defineStore(
     }
 
     const setUserInfo = (val: IUserInfo) => {
+      console.log('设置用户信息', val)
       userInfo.value = val
     }
 
     const clearUserInfo = () => {
       sessionid.value = null
       userInfo.value = { ...initState }
-    }
-
-    // 检查 sessionid 是否过期
-    const checkSessionid = async () => {
-      if (!sessionid.value) {
-        return
-      }
-
-      try {
-        await authSessionCheck()
-      } catch {
-        clearUserInfo()
-      }
-    }
-
-    // 用户登陆
-    const login = async (phoneCode = null) => {
-      console.log('用户登陆 Phone code', phoneCode)
-      try {
-        wx.login({
-          success: async function ({ code }) {
-
-          }
-        })
-      } catch (error) {
-        clearUserInfo()
-      }
     }
 
     // 获取用户信息
@@ -68,17 +42,31 @@ export const useUserStore = defineStore(
               setSessionid(data.sessionid)
               // 获取取用户信息
               const res = await getUserinfo()
-              setUserInfo(res.data || { ...initState })
+              setUserInfo(res.data)
             } catch (e) {
               clearUserInfo()
             }
           },
           fail: function (err) {
             clearUserInfo()
-          }
+          },
         })
       } catch (error) {
         clearUserInfo()
+      }
+    }
+
+    // 检查 sessionid 是否过期
+    const checkSessionid = async () => {
+      if (!sessionid.value) {
+        return
+      }
+
+      try {
+        await authSessionCheck()
+      } catch {
+        clearUserInfo()
+        getUserInfo()
       }
     }
 
@@ -86,7 +74,6 @@ export const useUserStore = defineStore(
     const reset = () => {
       userInfo.value = { ...initState }
     }
-
 
     return {
       sessionid,
@@ -98,7 +85,6 @@ export const useUserStore = defineStore(
       reset,
       checkSessionid,
       getUserInfo,
-      login,
     }
   },
   {
