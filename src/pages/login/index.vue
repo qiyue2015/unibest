@@ -78,6 +78,9 @@ onLoad(async () => {
             </template>
             <template v-else>
                 <wd-button :loading="loading" open-type="getPhoneNumber" size="large" block @getphonenumber="onBindPhone">授权登陆</wd-button>
+                <!-- <wd-button :loading="loading" open-type="getRealtimePhoneNumber" size="large" block @getrealtimephonenumber="onBindPhone">
+                    授权登陆
+                </wd-button> -->
             </template>
         </view>
     </view>

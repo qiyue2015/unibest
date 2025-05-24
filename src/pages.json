@@ -27,7 +27,13 @@
         "iconPath": "static/tabbar/home.png",
         "selectedIconPath": "static/tabbar/homeHL.png",
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "赛程"
+      },
+      {
+        "iconPath": "static/tabbar/ticket.png",
+        "selectedIconPath": "static/tabbar/ticketHL.png",
+        "pagePath": "pages/ticket/index",
+        "text": "门票"
       },
       {
         "iconPath": "static/tabbar/ucenter.png",
@@ -39,18 +45,17 @@
   },
   "pages": [
     {
-      "path": "pages/guide/index",
+      "path": "pages/index/index",
       "type": "home",
       "style": {
-        "navigationStyle": "custom"
+        "navigationBarTitleText": "赛程"
       }
     },
     {
-      "path": "pages/index/index",
+      "path": "pages/guide/index",
       "type": "page",
-      "needLogin": true,
       "style": {
-        "navigationBarTitleText": "昭觉县移风易俗"
+        "navigationStyle": "custom"
       }
     },
     {
@@ -62,11 +67,17 @@
       }
     },
     {
+      "path": "pages/ticket/index",
+      "type": "page",
+      "style": {
+        "navigationBarTitleText": "门票"
+      }
+    },
+    {
       "path": "pages/ucenter/index",
       "type": "page",
-      "needLogin": true,
       "style": {
-        "navigationBarTitleText": "昭觉县移风易俗"
+        "navigationBarTitleText": "我的"
       }
     }
   ],

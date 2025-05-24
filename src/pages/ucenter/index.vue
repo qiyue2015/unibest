@@ -1,11 +1,11 @@
 <route lang="json5">
-    {
-      needLogin: true,
-      style: {
-        navigationBarTitleText: '昭觉县移风易俗',
-      },
-    }
-    </route>
+  {
+    style: {
+      navigationBarTitleText: '我的',
+    },
+  }
+</route>
+<!-- needLogin: true, -->
     <template>
       <view class="bg-white overflow-hidden">
         <wd-tabs v-model="tab" sticky>

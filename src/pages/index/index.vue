@@ -1,45 +1,67 @@
-<route lang="json5">
+<route lang="json5" type="home">
 {
-  needLogin: true,
   style: {
-    // navigationStyle: 'custom',
-    navigationBarTitleText: '昭觉县移风易俗',
+    navigationBarTitleText: '赛程',
   },
 }
 </route>
+
 <template>
-  <view class="bg-white overflow-hidden pt-2 px-4">
-    <view class="flex flex-row gap-4">
-      <view>我要留言</view>
-      <view>我要写信</view>
-    </view>>
+  <!-- bg-[#06398d] -->
+  <!-- navigationStyle: 'custom', -->
+  <view class="h-screen overflow-hidden bg-[#f5f5f5]">
+    赛程
   </view>
 </template>
 
 <script lang="ts" setup>
-import { useUserStore } from '@/store'
+import { useAppStore, useUserStore } from '@/store'
+import { ref, computed } from 'vue'
 
-defineOptions({
-  name: 'Home',
-})
+defineOptions({ name: 'Home' })
 
+const appStore = useAppStore()
 const userStore = useUserStore()
 
-console.log('当前平台:', userStore.isLogined)
+const active = ref(0)
+const value = ref<number>(0)
+const handleConfirm = (date: Date) => {
+  console.log('选中的日期:', date)
+}
 
-// 获取屏幕边界到安全区域距离
-const { safeAreaInsets } = uni.getSystemInfoSync()
-const author = ref('菲鸽')
-const description = ref(
-  'unibest 是一个集成了多种工具和技术的 uniapp 开发模板，由 uniapp + Vue3 + Ts + Vite4 + UnoCss + UniUI + VSCode 构建，模板具有代码提示、自动格式化、统一配置、代码片段等功能，并内置了许多常用的基本组件和基本功能，让你编写 uniapp 拥有 best 体验。',
-)
-// 测试 uni API 自动引入
+const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+
+function formatDate(date: Date) {
+  return `${date.getMonth() + 1}.${date.getDate()}`
+}
+
+function getWeekList(startDate: Date) {
+  const list = []
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(startDate)
+    d.setDate(d.getDate() + i)
+    list.push({
+      date: formatDate(d),
+      weekday: weekDays[d.getDay()],
+    })
+  }
+  return list
+}
+
+const today = new Date() // 可替换为指定日期
+const weekList = ref(getWeekList(today))
+
 onLoad(() => {
-  console.log('项目作者:', author.value)
+//
 })
 </script>
 
 <style>
+
+page {
+  height: 100vh;
+  overflow: hidden;
+}
 .main-title-color {
   color: #d14328;
 }
