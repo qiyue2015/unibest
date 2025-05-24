@@ -36,14 +36,14 @@ export default defineUniPages({
       {
         iconPath: 'static/tabbar/ticket.png',
         selectedIconPath: 'static/tabbar/ticketHL.png',
-        pagePath: 'pages/login/index',
+        pagePath: 'pages/ticket/index',
         text: '门票',
       },
       {
         iconPath: 'static/tabbar/ucenter.png',
         selectedIconPath: 'static/tabbar/ucenterHL.png',
         pagePath: 'pages/ucenter/index',
-        text: '订单',
+        text: '我的',
       },
     ],
   },

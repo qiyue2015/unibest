@@ -1,95 +1,123 @@
 <route lang="json5">
     {
       style: {
-        navigationStyle: 'custom',
         navigationBarTitleText: '用户登陆',
       }
     }
 </route>
 
 <script lang="ts" setup>
-import { useAppStore, useUserStore } from '@/store'
-import { bindPhone, getUserinfo } from '@/api/user'
+import { useUserStore } from '@/store'
+import { bindPhone } from '@/api/user'
+import { useToast } from 'wot-design-uni'
 
-const appStore = useAppStore()
+const toast = useToast()
 const userStore = useUserStore()
-
-const setting = computed(() => appStore.accountInfo)
 const userInfo = computed(() => userStore.userInfo)
 
 const loading = ref(true)
 
 // 绑定手机号
 const onBindPhone = async ({ code }) => {
-    try {
-        wx.showLoading({ title: '登录中', mask: true })
-        await bindPhone(code)
-        const { data } = await getUserinfo()
-        userStore.setUserInfo(data)
-        uni.switchTab({
-            url: '/pages/index/index'
-        });
-    } finally {
-        wx.hideLoading()
+  try {
+    toast.loading({ msg: '登录中', duration: 0, direction: 'vertical', position: 'middle' })
+    await userStore.getUserInfo()
+    if (userStore.userInfo?.mobile) {
+      await bindPhone(code)
     }
+    uni.switchTab({ url: '/pages/index/index' })
+  } finally {
+    toast.close()
+  }
 }
 
-const onLogin = async () => {
-    uni.switchTab({
-        url: '/pages/index/index'
-    });
+// 实时获取手机号
+const onGetRealtimePhone = async ({ detail }) => {
+  // {"errMsg":"getPhoneNumber:ok","code":"a7b82b355371679cd1f6b25b7bd240cc58d2e365473df6097a45e018d6e85481"}
+  if (detail.errMsg === 'getPhoneNumber:ok') {
+    try {
+      toast.loading({ msg: '登录中', duration: 0 })
+      await bindPhone(detail.code)
+      await userStore.getUserInfo()
+      uni.switchTab({ url: '/pages/index/index' })
+    } finally {
+      wx.hideLoading()
+    }
+  } else {
+    toast.error({ msg: '获取手机号失败，请重试', duration: 1000 })
+  }
+}
+
+// 用户协议
+const onUserAgreement = () => {
+  uni.navigateTo({
+    url: '/pages-sub/agreement/index',
+  })
+}
+
+// 隐私政策
+const onPrivacyPolicy = () => {
+  uni.navigateTo({
+    url: '/pages-sub/privacy/index',
+  })
 }
 
 onLoad(async () => {
-    try {
-        loading.value = true
-        await userStore.getUserInfo()
-    } finally {
-        loading.value = false
-    }
+  toast.loading({
+    msg: '加载中',
+    duration: 0,
+    direction: 'vertical',
+    position: 'middle',
+  })
+  await userStore.getUserInfo()
+  if (userStore.userInfo.mobile) {
+    toast.success({
+      msg: '登录成功',
+      duration: 1000,
+      direction: 'vertical',
+      position: 'middle',
+      closed: () => {
+        uni.switchTab({ url: '/pages/index/index' })
+      },
+    })
+  }
 })
 </script>
 
 <template>
-    <view class="w-full h-screen overflow-hidden flex items-end bg-image"
-        :style="{ backgroundImage: setting?.home_bg ? `url(${setting?.home_bg})` : '' }">
-        <view v-if="!loading" class="w-64 mb-20 mx-auto gap-lg">
-            <!-- <wd-button
-                :loading="loading" 
-                open-type="getRealtimePhoneNumber" 
-                size="large" 
-                block
-                @getrealtimephonenumber="bindPhone"
-            >
-                手机号实时验证组件
-            </wd-button> -->
-            <!-- <wd-button
-                :loading="loading" 
-                open-type="getPhoneNumber" 
-                size="large" 
-                block
-                @getphonenumber="onBindPhone"
-            >
-                手机号快速验证组件
-            </wd-button> -->
-            <!-- 已绑定手机 -->
-            <template v-if="userInfo.mobile">
-                <wd-button :loading="loading" size="large" block @click="onLogin">进入</wd-button>
-            </template>
-            <template v-else>
-                <wd-button :loading="loading" open-type="getPhoneNumber" size="large" block @getphonenumber="onBindPhone">授权登陆</wd-button>
-                <!-- <wd-button :loading="loading" open-type="getRealtimePhoneNumber" size="large" block @getrealtimephonenumber="onBindPhone">
-                    授权登陆
-                </wd-button> -->
-            </template>
-        </view>
+  <view class="main flex flex-col items-center">
+    <view class="text-center my-20">
+      <image src="/static/images/avatar.png" class="w-20 h-20 rounded-full mb-2" mode="aspectFill" />
+      <view class="text-gray-500 text-sm">凉山州蓝球协会</view>
     </view>
+    <view class="w-full">
+      <view class="mx-10">
+          <!-- <wd-button open-type="getPhoneNumber" size="large" block @getphonenumber="onBindPhone">一键授权登录</wd-button> -->
+          <button type="primary" open-type="getRealtimePhoneNumber" @getrealtimephonenumber="onGetRealtimePhone">
+            一键授权登录
+          </button>
+      </view>
+    </view>
+    <view class="flex items-center text-size-xs text-gray-400 mt-4">
+      登录即视为同意
+      <text class="text-pink-500 mx-1" @click="onUserAgreement">《用户协议》</text>
+      和
+      <text class="text-pink-500 ml-1" @click="onPrivacyPolicy">《隐私政策》</text>
+    </view>
+  </view>
 </template>
 
-<style>
+<style lang="scss">
+body,
+page,
+.main {
+  @apply w-full h-screen overflow-hidden;
+  background-color: #f8f8f8;
+}
+
 .bg-image {
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
 }
 </style>

@@ -13,13 +13,13 @@ onLaunch(() => {
 
 onShow(async () => {
   // #ifdef MP-WEIXIN
-    // 检查 sessionid
-    if (userStore.isLogined) {
-      await userStore.checkSessionid()
-    }
+  // 检查 sessionid
+  if (userStore.isLogined) {
+    await userStore.checkSessionid()
+  }
 
-    // 版本更新检查
-    checkUpdate()
+  // 版本更新检查
+  checkUpdate()
   // #endif
 })
 

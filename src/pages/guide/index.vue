@@ -9,7 +9,7 @@
 <template>
   <view v-if="detail" class="main">
     <view class="w-750rpx min-h-562rpx overflow-hidden">
-      <wd-img width="100%" height="100%" :src="detail.cover" />
+      <image width="100%" height="100%" :src="detail.cover" />
     </view>
     <view class="max-w-686rpx mb-10 text-white text-size-md">
       <view v-for="row in detail.group" :key="row.title" class="flex mb-2">

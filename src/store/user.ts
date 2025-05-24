@@ -61,26 +61,21 @@ export const useUserStore = defineStore(
           return
         }
         // 登录流程
-        await new Promise((resolve, reject) => {
-          wx.login({
-            success: async function ({ code }) {
-              try {
-                let { data } = await authSessionOpenid(code)
-                setSessionid(data.sessionid)
-                // 从模块获取用户信息
-                const res = await getUserinfo()
-                setUserInfo(res.data || { ...initState })
-                resolve(null)
-              } catch (e) {
-                clearUserInfo()
-                reject(e)
-              }
-            },
-            fail: function (err) {
+        wx.login({
+          success: async function ({ code }) {
+            try {
+              let { data } = await authSessionOpenid(code)
+              setSessionid(data.sessionid)
+              // 获取取用户信息
+              const res = await getUserinfo()
+              setUserInfo(res.data || { ...initState })
+            } catch (e) {
               clearUserInfo()
-              reject(err)
             }
-          })
+          },
+          fail: function (err) {
+            clearUserInfo()
+          }
         })
       } catch (error) {
         clearUserInfo()

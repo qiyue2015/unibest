@@ -48,7 +48,10 @@
       "path": "pages/index/index",
       "type": "home",
       "style": {
-        "navigationBarTitleText": "赛程"
+        "disableScroll": true,
+        "navigationBarTitleText": "赛程",
+        "navigationBarBackgroundColor": "#f5f5f5",
+        "backgroundColor": "#f5f5f5"
       }
     },
     {
@@ -62,8 +65,23 @@
       "path": "pages/login/index",
       "type": "page",
       "style": {
-        "navigationStyle": "custom",
         "navigationBarTitleText": "用户登陆"
+      }
+    },
+    {
+      "path": "pages/order/detail",
+      "type": "page",
+      "needLogin": true,
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/order/index",
+      "type": "page",
+      "needLogin": true,
+      "style": {
+        "navigationBarTitleText": "我的订单"
       }
     },
     {
@@ -77,9 +95,60 @@
       "path": "pages/ucenter/index",
       "type": "page",
       "style": {
+        "navigationStyle": "custom",
         "navigationBarTitleText": "我的"
       }
     }
   ],
-  "subPackages": []
+  "subPackages": [
+    {
+      "root": "pages-sub",
+      "pages": [
+        {
+          "path": "agreement/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "用户协议"
+          }
+        },
+        {
+          "path": "help/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "帮助中心"
+          }
+        },
+        {
+          "path": "setting/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "设置"
+          }
+        },
+        {
+          "path": "verify/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "实名认证"
+          }
+        },
+        {
+          "path": "viewer/create",
+          "type": "page",
+          "needLogin": true,
+          "style": {
+            "navigationBarTitleText": "观演人信息"
+          }
+        },
+        {
+          "path": "viewer/index",
+          "type": "page",
+          "needLogin": true,
+          "style": {
+            "navigationBarTitleText": "常用观演人"
+          }
+        }
+      ]
+    }
+  ]
 }

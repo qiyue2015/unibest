@@ -8,6 +8,14 @@
 
 <template>
   <view class="h-screen overflow-hidden">
-    门票
+    <view class="mx-4">
+      <wd-skeleton :row-col="imageGroup" />
+    </view>
   </view>
 </template>
+
+<script lang="ts" setup>
+const imageGroup = [
+  { height: '171px' }, 1, { width: '107px' },
+]
+</script>

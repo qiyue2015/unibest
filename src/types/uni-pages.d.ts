@@ -7,13 +7,21 @@ interface NavigateToOptions {
   url: "/pages/index/index" |
        "/pages/guide/index" |
        "/pages/login/index" |
+       "/pages/order/detail" |
+       "/pages/order/index" |
        "/pages/ticket/index" |
-       "/pages/ucenter/index";
+       "/pages/ucenter/index" |
+       "/pages-sub/agreement/index" |
+       "/pages-sub/help/index" |
+       "/pages-sub/setting/index" |
+       "/pages-sub/verify/index" |
+       "/pages-sub/viewer/create" |
+       "/pages-sub/viewer/index";
 }
 interface RedirectToOptions extends NavigateToOptions {}
 
 interface SwitchTabOptions {
-  url: "/pages/index/index" | "/pages/login/index" | "/pages/ucenter/index"
+  url: "/pages/index/index" | "/pages/ticket/index" | "/pages/ucenter/index"
 }
 
 type ReLaunchOptions = NavigateToOptions | SwitchTabOptions;

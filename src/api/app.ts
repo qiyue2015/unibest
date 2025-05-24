@@ -6,6 +6,18 @@ export const getModuleSetting = () => {
 
 export const getActivityDetail = (id: number) => {
   return http.get('/app/index.php?c=entry&m=basketball&do=activity&op=detail', {
-    id
+    id,
+  })
+}
+
+// 赛事赛程例表
+export const getScheduleList = () => {
+  return http.get<any>('/app/index.php?c=entry&m=basketball&do=schedule&op=list')
+}
+
+// 赛事赛程详情
+export const getScheduleDetail = (id: number) => {
+  return http.get('/app/index.php?c=entry&m=basketball&do=schedule&op=detail', {
+    id,
   })
 }
