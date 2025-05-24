@@ -13,7 +13,10 @@ export interface IAuthItem {
 }
 
 export const authSessionCheck = () => {
-  return http.post('/app/index.php?c=auth&a=session&do=check')
+  return http({
+    url: '/app/index.php?c=auth&a=session&do=check',
+    hideErrorToast: true,
+  })
 }
 
 export const authSessionOpenid = (code: string) => {
