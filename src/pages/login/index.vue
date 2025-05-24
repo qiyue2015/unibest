@@ -18,17 +18,12 @@ const userInfo = computed(() => userStore.userInfo)
 // 用户登录
 const onLogin = async () => {
   try {
-    toast.loading({ msg: '加载中', duration: 0 })
-    userStore.getUserInfo().then(() => {
-      toast.success({
-        msg: '登录成功',
-        duration: 1000,
-        direction: 'vertical',
-        position: 'middle',
-        closed: () => {
-          uni.switchTab({ url: '/pages/index/index' })
-        },
-      })
+    toast.success({
+      msg: '登录成功',
+      duration: 1000,
+      closed: () => {
+        uni.switchTab({ url: '/pages/index/index' })
+      },
     })
   } catch (error) {
     console.error('获取用户信息失败:', error)
@@ -59,7 +54,7 @@ const onGetRealtimePhone = async ({ detail }) => {
       await userStore.getUserInfo()
       uni.switchTab({ url: '/pages/index/index' })
     } finally {
-      wx.hideLoading()
+      toast.close()
     }
   } else {
     toast.error({ msg: '获取手机号失败，请重试', duration: 1000 })
@@ -79,6 +74,13 @@ const onPrivacyPolicy = () => {
     url: '/pages-sub/privacy/index',
   })
 }
+
+onShow(() => {
+  toast.loading({ msg: '加载中', duration: 0 })
+  userStore.getUserInfo().finally(() => {
+    toast.close()
+  })
+})
 </script>
 
 <template>
