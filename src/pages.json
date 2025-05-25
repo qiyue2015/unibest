@@ -120,6 +120,13 @@
       "root": "pages-sub",
       "pages": [
         {
+          "path": "about/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "关于我们"
+          }
+        },
+        {
           "path": "agreement/index",
           "type": "page",
           "style": {
