@@ -20,7 +20,7 @@
                 <block v-for="(venue, index) in row.venues" :key="index">
                   <wd-cell :title="venue.team" :value="venue.time" size="large" center />
                 </block>
-                <wd-cell size="large" center :is-link="row.sale_status === 1">
+                <wd-cell size="large" center :is-link="row.sale_status === 1" @click="onOrder(row)">
                   <template #title>
                     <text class="text-amber">¥ {{ row.price }}</text>
                   </template>
@@ -87,6 +87,11 @@ const fetchData = async () => {
   } finally {
     uni.hideLoading()
   }
+}
+
+const onOrder = (row: any) => {
+  if (row.sale_status !== 1) return
+  uni.navigateTo({ url: `/pages/index/confirm?schedule_id=${row.id}` })
 }
 
 onShow(() => {

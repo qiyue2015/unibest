@@ -62,6 +62,17 @@
       }
     },
     {
+      "path": "pages/index/confirm",
+      "type": "page",
+      "needLogin": true,
+      "style": {
+        "disableScroll": true,
+        "navigationBarTitleText": "确认订单",
+        "navigationBarBackgroundColor": "#f5f5f5",
+        "backgroundColor": "#f5f5f5"
+      }
+    },
+    {
       "path": "pages/login/index",
       "type": "page",
       "style": {
@@ -130,6 +141,15 @@
           "type": "page",
           "style": {
             "navigationBarTitleText": "实名认证"
+          }
+        },
+        {
+          "path": "viewer/choose",
+          "type": "page",
+          "needLogin": true,
+          "style": {
+            "disableScroll": true,
+            "navigationBarTitleText": "选择观演人"
           }
         },
         {

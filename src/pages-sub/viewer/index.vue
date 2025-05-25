@@ -12,13 +12,16 @@
     <block v-if="isEmpty">
       <wd-status-tip image="search" tip="暂无观众演人信息" />
     </block>
-    <view class="flex flex-col gap-4 m-4">
+    <view v-else class="flex flex-col gap-4 m-4">
       <view v-for="(item, index) in list" :key="index" class="rounded-xl overflow-hidden">
         <wd-cell-group>
-          <wd-cell :title="item.realname" :label="item.idcard" size="large" center>
+          <wd-cell :title="item.realname" size="large" center>
+            <template #label>
+              <text v-if="item.mobile">{{ item.idcard }}</text>
+              <text v-if="!item?.mobile" class="text-red">联系方式待填写</text>
+            </template>
             <view class="flex gap-3 justify-end">
-              <wd-icon name="edit-outline" size="1.5em" />
-              <wd-icon name="delete" size="1.5em" @click="onDeleteViewer(item.id)" />
+              <wd-icon name="edit-outline" size="1.5em" @click="goToEditViewer(item)" />
             </view>
           </wd-cell>
         </wd-cell-group>
@@ -31,11 +34,10 @@
 </template>
 
 <script lang="ts" setup>
-import { deleteViewer, getViewerList } from '@/api/viewer'
-import { useMessage, useToast } from 'wot-design-uni'
+import { getViewerList } from '@/api/viewer'
+import { useToast } from 'wot-design-uni'
 
 const toast = useToast()
-const message = useMessage()
 
 const list = ref<any[]>([])
 
@@ -55,32 +57,19 @@ const fetchData = async () => {
   }
 }
 
-// 添加观众演人
+// 添加观演人
 const addViewer = () => {
   uni.navigateTo({
     url: '/pages-sub/viewer/create',
   })
 }
 
-// 删除
-const onDeleteViewer = async (id: string) => {
-  message
-    .confirm({
-      title: '删除确认',
-      msg: '确定要删除该观演人信息吗？删除后将无法恢复。',
-    })
-    .then(async () => {
-      try {
-        toast.loading({ msg: '删除中...', duration: 0 })
-        await deleteViewer(id)
-        await fetchData()
-      } finally {
-        toast.close()
-      }
-    })
-    .catch(() => {
-      console.log('点击了取消按钮')
-    })
+// 编辑观演人
+const goToEditViewer = (viewer: any) => {
+  viewer = JSON.stringify(viewer)
+  uni.navigateTo({
+    url: `/pages-sub/viewer/create?viewer=${viewer}`,
+  })
 }
 
 onShow(() => fetchData())

@@ -6,6 +6,7 @@
 interface NavigateToOptions {
   url: "/pages/index/index" |
        "/pages/guide/index" |
+       "/pages/index/confirm" |
        "/pages/login/index" |
        "/pages/order/detail" |
        "/pages/order/index" |
@@ -15,6 +16,7 @@ interface NavigateToOptions {
        "/pages-sub/help/index" |
        "/pages-sub/setting/index" |
        "/pages-sub/verify/index" |
+       "/pages-sub/viewer/choose" |
        "/pages-sub/viewer/create" |
        "/pages-sub/viewer/index";
 }
