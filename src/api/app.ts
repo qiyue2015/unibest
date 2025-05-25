@@ -21,3 +21,22 @@ export const getScheduleDetail = (id: number) => {
     id,
   })
 }
+
+// 提交订单
+export const createOrder = (data: any) => {
+  return http.post<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=order&op=create', data)
+}
+
+// 生成订单支付参数
+export const payOrder = (tid: string) => {
+  return http.post<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=pay', {
+    tid,
+  })
+}
+
+// 支付结果
+export const getPayResult = (tid: string) => {
+  return http.get<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=payResult', {
+    tid,
+  })
+}

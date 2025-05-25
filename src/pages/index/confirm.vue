@@ -35,7 +35,7 @@
               size="large"
               center
             >
-              <wd-icon name="delete" size="18px" />
+              <wd-icon name="delete" size="18px" @click="removeViewer(index)" />
             </wd-cell>
           </wd-cell-group>
         </view>
@@ -61,7 +61,7 @@
 import { ref, computed } from 'vue'
 import { getViewerList } from '@/api/viewer'
 import { useToast } from 'wot-design-uni'
-import { getScheduleDetail } from '@/api/app'
+import { createOrder, getScheduleDetail, payOrder } from '@/api/app'
 
 defineOptions({
   name: 'ConfirmOrder',
@@ -90,6 +90,43 @@ const fetchData = async () => {
   }
 }
 
+// 删除已选择的观演人
+const removeViewer = (index: number) => {
+  viewers.value.splice(index, 1)
+}
+
+// 前往选择观演人
+const selectViewers = () => {
+  uni.navigateTo({
+    url: '/pages-sub/viewer/choose?schedule_id=' + scheduleId.value,
+    success: () => {
+      // 监听选择的观演人 IDs
+      const viewerIds = viewers.value.map((v) => v.id)
+      uni.$emit('selectedViewerIds', viewerIds)
+    },
+  })
+}
+
+const submitOrder = async () => {
+  const { data } = await createOrder({
+    schedule_id: scheduleId.value,
+    viewers: viewers.value.map((v) => v.id),
+  })
+
+  if (!data.tid) {
+    toast.error({ msg: '订单创建失败，请稍后再试' })
+    return
+  }
+
+  toast.success({
+    msg: '订单创建成功',
+    duration: 1000,
+    closed: () => {
+      uni.navigateTo({ url: `/pages/order/pay?tid=${data.tid}` })
+    },
+  })
+}
+
 onLoad((options) => {
   if (options?.schedule_id) {
     scheduleId.value = parseInt(options.schedule_id)
@@ -112,31 +149,6 @@ onLoad((options) => {
 onUnload(() => {
   uni.$off('viewersSelected')
 })
-
-const fetchViewers = async () => {
-  const { data } = await getViewerList()
-  viewers.value = data || []
-}
-
-// 前往选择观演人
-const selectViewers = () => {
-  uni.navigateTo({
-    url: '/pages-sub/viewer/choose?schedule_id=' + scheduleId.value,
-    success: () => {
-      // 监听选择的观演人 IDs
-      const viewerIds = viewers.value.map((v) => v.id)
-      uni.$emit('selectedViewerIds', viewerIds)
-    },
-  })
-}
-
-const submitOrder = () => {
-  // TODO: 实际下单逻辑
-  uni.showToast({ title: '下单成功', icon: 'success' })
-  setTimeout(() => {
-    uni.redirectTo({ url: '/pages/order/index' })
-  }, 1000)
-}
 </script>
 
 <style lang="scss" scoped></style>

@@ -58,8 +58,8 @@ const handleSubmit = () => {
     if (valid) {
       try {
         toast.loading({ msg: '保存中...', duration: 0 })
-        if (formData.id) {
-          await updateViewer(formData)
+        if (viewerId.value) {
+          await updateViewer(viewerId.value, formData)
         } else {
           await saveViewer(formData)
         }
@@ -105,7 +105,7 @@ const onDeleteViewer = async (id: string) => {
       console.log('点击了取消按钮')
     })
 }
-// updateViewer
+
 // 获取页面传参
 onLoad(({ viewer }) => {
   if (viewer) {
@@ -139,7 +139,7 @@ onLoad(({ viewer }) => {
             </template>
             <wd-input
               v-model="formData.realname"
-              :readonly="formDisabled"
+              :readonly="isEditable"
               label="真实姓名"
               label-width="5.6em"
               size="large"
@@ -149,7 +149,7 @@ onLoad(({ viewer }) => {
             />
             <wd-input
               v-model="formData.idcard"
-              :readonly="formDisabled"
+              :readonly="isEditable"
               label="身份证号"
               label-width="5.6em"
               size="large"

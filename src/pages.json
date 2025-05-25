@@ -96,6 +96,10 @@
       }
     },
     {
+      "path": "pages/order/pay",
+      "type": "page"
+    },
+    {
       "path": "pages/ticket/index",
       "type": "page",
       "style": {

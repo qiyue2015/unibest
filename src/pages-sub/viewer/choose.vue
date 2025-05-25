@@ -20,9 +20,10 @@
                 <block v-for="viewer in viewers" :key="viewer.id">
                   <wd-cell size="large" custom-class="cell-custom-class" center>
                     <template #title>
-                      <wd-checkbox :model-value="viewer.id" size="large" shape="square">
+                      <wd-checkbox :model-value="viewer.id" :disabled="!viewer.mobile" size="large" shape="square">
                         <view class="text-base">{{ viewer.realname }}</view>
-                        <view class="text-sm text-gray-500">{{ viewer.idcard }}</view>
+                        <view v-if="viewer?.mobile" class="text-sm text-gray-500">{{ viewer.idcard }}</view>
+                        <view v-else class="text-sm text-red">联系方待填写</view>
                       </wd-checkbox>
                     </template>
                     <wd-button type="icon" icon="edit-outline" @click="goToEditViewer(viewer)" />

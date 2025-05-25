@@ -4,6 +4,7 @@ export interface IViewer {
   id?: number
   realname?: string
   idcard?: string
+  mobile?: string
 }
 
 export const getViewerList = () => {
@@ -18,6 +19,6 @@ export const deleteViewer = (id: string) => {
   return http.post<IViewer>('/app/index.php?a=wxapp&c=entry&m=basketball&do=viewer&op=delete', { id })
 }
 
-export const updateViewer = (data: IViewer) => {
-  return http.post<IViewer>('/app/index.php?a=wxapp&c=entry&m=basketball&do=viewer&op=update', data)
+export const updateViewer = (id: string, data: IViewer) => {
+  return http.post<IViewer>('/app/index.php?a=wxapp&c=entry&m=basketball&do=viewer&op=update&id=' + id, data)
 }
