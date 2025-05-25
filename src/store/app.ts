@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getModuleSetting } from '@/api/app';
+import { getModuleSetting } from '@/api/app'
 
-const initState = { uniacid: 0, name: '', bg_home:'' }
+const initState = { uniacid: 0, name: '', bg_home: '' }
 
 export const useAppStore = defineStore(
   'app',
@@ -31,22 +31,27 @@ export const useAppStore = defineStore(
       accountInfo.value = { ...initState }
     }
 
+    console.log('useAppStore init')
+    // #ifdef MP-WEIXIN
+    console.log('uni.getSystemSetting', uni.getSystemSetting())
+    console.log('uni.getAppAuthorizeSetting', uni.getAppAuthorizeSetting())
+    // #endif
+    console.log('uni.getDeviceInfo', uni.getDeviceInfo())
+    console.log('uni.getWindowInfo', uni.getWindowInfo())
+    console.log('uni.getAppBaseInfo', uni.getAppBaseInfo())
+
     // 计算顶部安全区域和胶囊高度（状态栏 + 自定义导航栏高度）
     const statusBarHeight = ref<number>(0)
-    const menuButtonRect = ref<UniApp.GetMenuButtonBoundingClientRectRes | null>(null)
     const topBarHeight = ref<number>(0)
+    const menuButtonRect = ref(null)
 
     const calcTopBarHeight = () => {
+      const windowInfo = uni.getWindowInfo()
+      statusBarHeight.value = windowInfo.statusBarHeight || 0
+      topBarHeight.value = windowInfo.screenTop
       // #ifdef MP-WEIXIN
-      const sysInfo = uni.getSystemInfoSync()
-      statusBarHeight.value = sysInfo.statusBarHeight || 0
       menuButtonRect.value = uni.getMenuButtonBoundingClientRect()
-      // 胶囊下边距 - 状态栏上边距 + 状态栏高度 = 总高度
-      topBarHeight.value = (menuButtonRect.value.bottom - menuButtonRect.value.top) + menuButtonRect.value.top
-      // #else
-      statusBarHeight.value = 0
-      menuButtonRect.value = null
-      topBarHeight.value = 44 // 默认导航栏高度
+      topBarHeight.value = menuButtonRect.value.top - windowInfo.statusBarHeight + menuButtonRect.value.bottom
       // #endif
     }
 
