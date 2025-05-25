@@ -1,20 +1,19 @@
 <route lang="json5">
-  {
-    style: {
-      navigationStyle: 'custom',
-      navigationBarTitleText: '我的',
-    },
-  }
+{
+  style: {
+    navigationStyle: 'custom',
+    navigationBarTitleText: '我的',
+  },
+}
 </route>
 
 <template>
   <view class="main flex flex-col relative box-border">
     // #ifdef MP-WEIXIN
-    <view :style="headerStyle" />
-    // #endif
-    <view class="absolute z-0 top-0 right-0 w-full min-w-750rpx h-421rpx overflow-hidden">
-      <image width="100%" height="100%" src="/static/images/topBg.png" />
+    <view class="box-border w-full center" :style="headerStyle">
+      <view class="text-lg font-bold text-black w-full text-center">我的</view>
     </view>
+    // #endif
 
     <view class="z-36 mx-4">
       <!-- 顶部头像昵称区域 -->
@@ -44,8 +43,14 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group border>
           <block v-for="item in menuList" :key="item.title">
-            <wd-cell :title="item.title" :center="true" size="large" is-link @click="goTo(item.url, item.need_login)"
-              class="menu-card">
+            <wd-cell
+              :title="item.title"
+              :center="true"
+              size="large"
+              is-link
+              @click="goTo(item.url, item.need_login)"
+              class="menu-card"
+            >
               <template #icon>
                 <image :src="item.icon" class="w-8 h-8 mr-3" mode="aspectFill" />
               </template>
@@ -68,6 +73,7 @@ const message = useMessage()
 const headerStyle = computed(() => {
   return {
     height: `${appStore.topBarHeight}px`,
+    paddingTop: `${appStore.statusBarHeight}px`,
   }
 })
 
@@ -80,7 +86,7 @@ const userInfo = computed(() => {
 })
 
 const menuList = [
-{
+  {
     title: '常用观演人',
     icon: 'https://mp-img1.wifixc.com/static/images/viewerHL.svg',
     url: '/pages-sub/viewer/index',
@@ -104,14 +110,17 @@ const menuList = [
 const goTo = (url: string, needLogin = true) => {
   // 如果需要登录且用户未登录
   if (needLogin && !userStore.isLogined) {
-    message.confirm({
-      msg: '登录后可使用该功能，是否前往登录？',
-      title: '请先登录'
-    }).then(() => {
-      uni.navigateTo({ url: '/pages/login/index' })
-    }).catch(() => {
-      // 取消登录
-    })
+    message
+      .confirm({
+        msg: '登录后可使用该功能，是否前往登录？',
+        title: '请先登录',
+      })
+      .then(() => {
+        uni.navigateTo({ url: '/pages/login/index' })
+      })
+      .catch(() => {
+        // 取消登录
+      })
     return
   }
 
@@ -128,8 +137,7 @@ const goOrder = () => goTo('/pages/order/index', true)
 // 设置
 const goSetting = () => goTo('/pages-sub/setting/index', true)
 
-onLoad(() => {
-})
+onLoad(() => {})
 </script>
 
 <style lang="scss">
@@ -137,6 +145,11 @@ body,
 page,
 main {
   @apply h-screen overflow-hidden;
+  background-image: url(https://mp-img1.wifixc.com/static/images/topBg.png);
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #f7f7f7;
 }
 
 .ucenter-bg {
