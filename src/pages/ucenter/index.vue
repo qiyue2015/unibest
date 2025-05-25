@@ -15,31 +15,36 @@
     </view>
     // #endif
 
-    <view class="z-36 mx-4">
+    <view class="z-36 mx-4 flex flex-col gap-4">
       <!-- 顶部头像昵称区域 -->
-      <view class="flex items-center pt-4 pb-8">
-        <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
-        <view class="ml-2" @click="goSetting">
-          <view class="text-base font-bold text-black">{{ userInfo.nickname }}</view>
-          <view class="text-sm text-gray-500">{{ userInfo.mobile }}</view>
+      <view class="w-full pt-4 pb-4 flex justify-between items-center">
+        <view class="flex items-center">
+          <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
+          <view class="ml-2" @click="goSetting">
+            <view class="text-base font-bold text-black">{{ userInfo.nickname }}</view>
+            <view class="text-sm text-gray-500">{{ userInfo.mobile }}</view>
+          </view>
         </view>
+        <wd-button icon="edit-outline" type="icon" @click="goTo('/pages-sub/setting/index', true)" />
       </view>
 
       <!-- 功能入口区域 -->
-      <view class="rounded-xl overflow-hidden mb-4">
+      <view class="rounded-xl overflow-hidden">
         <wd-cell-group border>
           <wd-cell title="我的订单" size="large" is-link center @click="goOrder">
             <template #icon>
               <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
             </template>
           </wd-cell>
-          <!-- <wd-cell title="我的门票" size="large" is-link center @click="goTicket">
+          <wd-cell title="常用观演人" size="large" is-link center @click="goTo('/pages-sub/viewer/index', true)">
             <template #icon>
-              <image src="https://mp-img1.wifixc.com/static/images/youhui.svg" class="w-6 h-6 mr-2" mode="aspectFill" />
+              <image src="https://mp-img1.wifixc.com/static/images/viewerHL.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
             </template>
-          </wd-cell> -->
+          </wd-cell>
         </wd-cell-group>
       </view>
+
+      <!-- 菜单列表 -->
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group border>
           <block v-for="item in menuList" :key="item.title">
@@ -56,6 +61,17 @@
               </template>
             </wd-cell>
           </block>
+        </wd-cell-group>
+      </view>
+
+      <!-- 设置 -->
+      <view class="rounded-xl overflow-hidden">
+        <wd-cell-group border>
+          <wd-cell title="设置" size="large" is-link center @click="goTo('/pages-sub/setting/index', true)">
+            <template #icon>
+              <image src="https://mp-img1.wifixc.com/static/images/shezhi.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
+            </template>
+          </wd-cell>
         </wd-cell-group>
       </view>
     </view>
@@ -87,22 +103,16 @@ const userInfo = computed(() => {
 
 const menuList = [
   {
-    title: '常用观演人',
-    icon: 'https://mp-img1.wifixc.com/static/images/viewerHL.svg',
-    url: '/pages-sub/viewer/index',
-    need_login: true,
-  },
-  {
     title: '帮助与客服',
     icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
     url: '/pages-sub/help/index',
     need_login: false,
   },
   {
-    title: '设置',
-    icon: 'https://mp-img1.wifixc.com/static/images/shezhi.svg',
-    url: '/pages-sub/setting/index',
-    need_login: true,
+    title: '关于我们',
+    icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
+    url: '/pages-sub/about/index',
+    need_login: false,
   },
 ]
 
@@ -128,9 +138,6 @@ const goTo = (url: string, needLogin = true) => {
   uni.navigateTo({ url })
 }
 
-// 我的门票
-const goTicket = () => uni.switchTab({ url: '/pages/ticket/index' })
-
 // 我的订单
 const goOrder = () => goTo('/pages/order/index', true)
 
@@ -150,40 +157,5 @@ main {
   background-position: top center;
   background-repeat: no-repeat;
   background-color: #f7f7f7;
-}
-
-.ucenter-bg {
-  min-height: 100vh;
-  background: url('/static/images/topBg.png') top center no-repeat;
-  background-size: 100% auto;
-  background-color: #f7f7f7;
-}
-
-.ucenter-header {
-  background: #fff;
-}
-
-.avatar {
-  width: 64rpx;
-  height: 64rpx;
-  background: #f3f3f3;
-}
-
-.nickname {
-  color: #222;
-}
-
-.login-btn {
-  background: #d14328;
-  color: #fff;
-  font-size: 16px;
-}
-
-.menu-list .menu-card {
-  transition: box-shadow 0.2s;
-}
-
-.menu-list .menu-card:active {
-  box-shadow: 0 2px 8px rgba(209, 67, 40, 0.08);
 }
 </style>
