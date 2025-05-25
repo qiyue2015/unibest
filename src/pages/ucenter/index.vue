@@ -17,7 +17,7 @@
 
     <view class="z-36 mx-4">
       <!-- 顶部头像昵称区域 -->
-      <view class="flex items-center py-8">
+      <view class="flex items-center pt-4 pb-8">
         <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
         <view class="ml-2" @click="goSetting">
           <view class="text-base font-bold text-black">{{ userInfo.nickname }}</view>
