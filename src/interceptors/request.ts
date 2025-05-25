@@ -72,6 +72,11 @@ const httpInterceptor = {
     if (userStore?.sessionid) {
       options.url += '&state=we7sid-' + userStore?.sessionid
     }
+    // post 请求为表单形式，支持数组
+    if (options.method === 'POST') {
+      options.header['Content-Type'] = 'application/x-www-form-urlencoded'
+      options.data = qs.stringify(options.data, { arrayFormat: 'indices' })
+    }
   },
 }
 
