@@ -8,14 +8,14 @@
 </route>
 
 <script lang="ts" setup>
-import { saveViewer } from '@/api/viewer'
+import { saveViewer, updateViewer } from '@/api/viewer'
 import { useToast } from 'wot-design-uni'
 import { FormRules } from 'wot-design-uni/components/wd-form/types'
 
 const toast = useToast()
 
-const formData = reactive({ realname: '', idcard: '' })
-
+const formRef = ref()
+const formData = reactive({ id: undefined, realname: '', idcard: '', mobile: undefined })
 const formRules: FormRules = {
   realname: [{ required: true, message: '请输入真实姓名' }],
   idcard: [
@@ -28,26 +28,43 @@ const formRules: FormRules = {
       },
     },
   ],
+  mobile: [
+    { required: true, message: '请输入手机号码' },
+    {
+      required: false,
+      message: '手机号码格式不正确',
+      validator: (val) => {
+        return /^1[3-9]\d{9}$/.test(val)
+      },
+    },
+  ],
 }
 
-const formRef = ref()
 const handleSubmit = () => {
-  formRef.value.validate().then(async ({ valid, errors }) => {
+  formRef.value.validate().then(async ({ valid }) => {
     if (valid) {
       try {
         toast.loading({ msg: '保存中...', duration: 0 })
-        await saveViewer(formData)
-        toast.success({
-          msg: '保存成功',
-          duration: 1000,
-          closed: () => uni.navigateBack(),
-        })
-      } catch (error) {
-        toast.error(error.message)
+        if (formData.id) {
+          await updateViewer(formData)
+        } else {
+          await saveViewer(formData)
+        }
+        toast.success({ msg: '保存成功', duration: 1000 })
+      } catch {
+        toast.close()
       }
     }
   })
 }
+// updateViewer
+// 获取页面传参
+onLoad(({ viewer }) => {
+  if (viewer) {
+    const parsedViewer = JSON.parse(decodeURIComponent(viewer))
+    Object.assign(formData, parsedViewer)
+  }
+})
 </script>
 
 <template>
@@ -72,6 +89,15 @@ const handleSubmit = () => {
             clearable
             v-model="formData.idcard"
             placeholder="请填写观演人身份证号码"
+          />
+          <wd-input
+            label="手机号码"
+            label-width="5.6em"
+            size="large"
+            prop="mobile"
+            clearable
+            v-model="formData.mobile"
+            placeholder="请填写观演人手机号码"
           />
         </wd-cell-group>
       </view>

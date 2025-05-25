@@ -17,3 +17,7 @@ export const saveViewer = (data: IViewer) => {
 export const deleteViewer = (id: string) => {
   return http.post<IViewer>('/app/index.php?c=entry&m=basketball&do=viewer&op=delete', { id })
 }
+
+export const updateViewer = (data: IViewer) => {
+  return http.post<IViewer>('/app/index.php?c=entry&m=basketball&do=viewer&op=update', data)
+}
