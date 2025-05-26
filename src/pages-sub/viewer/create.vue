@@ -161,7 +161,7 @@ onLoad(({ viewer }) => {
         </view>
 
         <view class="rounded-xl overflow-hidden">
-          <wd-cell-group border>
+          <wd-cell-group title="联系方式" border>
             <wd-input
               v-model="formData.mobile"
               :readonly="formDisabled"
