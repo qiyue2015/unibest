@@ -67,7 +67,7 @@
         <wd-cell title="订单编号">
           <view class="flex justify-between">
             <text>{{ detail.tid }}</text>
-            <text class="text-rose">复制</text>
+            <text class="text-rose" @click="onCopyOrderId">复制</text>
           </view>
         </wd-cell>
         <wd-cell title="下单时间" :value="detail.created_at" />
@@ -151,6 +151,13 @@ const onPayOrder = async () => {
     })
   } catch (error) {
     onFail('支付失败，请稍后再试')
+  }
+}
+
+// 复制订单号
+const onCopyOrderId = () => {
+  if (detail.tid) {
+    detail.tid && uni.setClipboardData({ data: detail.tid })
   }
 }
 
