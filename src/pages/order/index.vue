@@ -35,8 +35,8 @@ const tabs = reactive([
   { title: '全部', value: 'all' },
   { title: '待支付', value: '0' },
   { title: '待使用', value: '1' },
-  { title: '已完成', value: '3' },
-  { title: '已关闭', value: '2' },
+  { title: '已完成', value: '2' },
+  { title: '已关闭', value: '3' },
 ])
 
 const queryParams = reactive({ status: 'all', current: 1, pageSize: 10 })
@@ -46,11 +46,11 @@ const state = ref<LoadMoreState>('loading')
 const fetchData = async () => {
   try {
     const { data } = await getOrderList(queryParams)
-    if (data.length === 0) {
+    queryParams.current += 1
+    list.value = [...list.value, ...data]
+    if (data.length === 0 || data.length < queryParams.pageSize) {
       state.value = 'finished'
     } else {
-      queryParams.current += 1
-      list.value = [...list.value, ...data]
       state.value = 'loading'
     }
   } catch {
@@ -72,6 +72,10 @@ const isEmpty = computed(() => {
 })
 
 onLoad(() => {
+  fetchData()
+})
+
+onShow(() => {
   fetchData()
 })
 </script>

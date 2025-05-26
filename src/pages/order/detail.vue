@@ -16,7 +16,7 @@
       <!-- 0待支付 -->
       <template v-if="detail.status === 0">
         <view class="text-size-xl">待支付</view>
-        <view class="text-gray text-size-sm">请在09分59秒内完成支付，超时订单将会关闭</view>
+        <view class="text-gray text-size-sm">{{ countdownText }}</view>
         <view class="grid grid-cols-2 gap-2 mt-3">
           <wd-button type="primary" @click="onPayOrder">立即支付</wd-button>
           <wd-button type="info" @click="onCloseOrder">取消订单</wd-button>
@@ -30,6 +30,9 @@
       <!-- 3已退款 4退款失败 5未支付关闭 -->
       <template v-if="detail.status >= 3">
         <view class="text-size-xl">已关闭</view>
+        <template v-if="detail.status === 6">
+          <view class="text-gray text-size-sm">订单未及时付款，交易已关闭</view>
+        </template>
         <template v-if="detail.status === 5">
           <view class="text-gray text-size-sm">订单已手动取消，交易已关闭</view>
         </template>
@@ -98,6 +101,44 @@ const detail = reactive({
   refund_at: '',
   created_at: '',
 })
+const countdownText = ref('请在09分59秒内完成支付，超时订单将会关闭')
+let countdownTimer: number | null = null
+const PAY_TIMEOUT = 10 * 60 // 10分钟，单位秒
+
+function updateCountdown() {
+  if (!detail.created_at) {
+    countdownText.value = '请在09分59秒内完成支付，超时订单将会关闭'
+    return
+  }
+  const created = new Date(detail.created_at.replace(/-/g, '/')).getTime()
+  const now = Date.now()
+  const expire = created + PAY_TIMEOUT * 1000
+  let left = Math.floor((expire - now) / 1000)
+  if (left <= 0) {
+    countdownText.value = '订单已超时，请刷新页面查看最新状态'
+    stopCountdown() // 只停止倒计时，不再自动fetchData，避免死循环
+    return
+  }
+  const min = String(Math.floor(left / 60)).padStart(2, '0')
+  const sec = String(left % 60).padStart(2, '0')
+  countdownText.value = `请在${min}分${sec}秒内完成支付，超时订单将会关闭`
+}
+
+function startCountdown() {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+  updateCountdown()
+  countdownTimer = setInterval(updateCountdown, 1000)
+}
+
+function stopCountdown() {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+}
 
 const fetchData = async () => {
   try {
@@ -105,6 +146,21 @@ const fetchData = async () => {
     const { data } = await getOrderInfo(orderId.value)
     Object.assign(detail, data)
     toast.close()
+    if (detail.status === 0) {
+      // 判断是否已超时，超时不再启动倒计时
+      const created = new Date(detail.created_at.replace(/-/g, '/')).getTime()
+      const now = Date.now()
+      const expire = created + PAY_TIMEOUT * 1000
+      let left = Math.floor((expire - now) / 1000)
+      if (left > 0) {
+        startCountdown()
+      } else {
+        stopCountdown()
+        countdownText.value = '订单已超时，请刷新页面查看最新状态'
+      }
+    } else {
+      stopCountdown()
+    }
   } catch {
     toast.error({ msg: '订单不存在', duration: 1000 })
     uni.redirectTo({ url: '/pages/order/index' })
@@ -190,6 +246,10 @@ onShow(async () => {
   if (orderId.value) {
     await fetchData()
   }
+})
+
+onUnmounted(() => {
+  stopCountdown()
 })
 </script>
 

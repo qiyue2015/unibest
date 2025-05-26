@@ -12,7 +12,7 @@
 <template>
   <view class="main">
     <wd-tabs v-model="active" custom-class="m-tabs" slidable="always" animated auto-line-width swipeable>
-      <block v-for="item in list" :key="item">
+      <block v-for="item in list" :key="item.id">
         <wd-tab :title="item.title">
           <block v-for="row in item.items" :key="row.id">
             <view class="mx-4 m-3 rounded-xl overflow-hidden">
