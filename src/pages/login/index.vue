@@ -33,7 +33,7 @@ const onLogin = async () => {
 // 绑定手机号
 const onBindPhone = async ({ code }) => {
   try {
-    toast.loading({ msg: '登录中', duration: 0, direction: 'vertical', position: 'middle' })
+    toast.loading({ msg: '登录中', duration: 0, direction: 'vertical' })
     await userStore.getUserInfo()
     if (userStore.userInfo?.mobile) {
       await bindPhone(code)

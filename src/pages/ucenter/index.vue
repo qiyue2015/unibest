@@ -150,7 +150,7 @@ onLoad(() => {})
 <style lang="scss">
 body,
 page,
-main {
+.main {
   @apply h-screen overflow-hidden;
   background-image: url(https://mp-img1.wifixc.com/static/images/topBg.png);
   background-size: 100% auto;

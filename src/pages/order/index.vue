@@ -77,9 +77,6 @@ onLoad(() => {
 </script>
 
 <style lang="scss" scoped>
-.main {
-}
-
 :deep(.wd-tabs.m-tabs) {
   background: #f5f5f5;
   height: 100vh;

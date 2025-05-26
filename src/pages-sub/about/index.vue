@@ -13,7 +13,7 @@
 <style lang="scss">
 body,
 page,
-main {
+.main {
   @apply h-screen overflow-hidden;
 }
 </style>

@@ -1,9 +1,9 @@
 <route lang="json5">
-    {
-      style: {
-        navigationStyle: 'custom'
-      },
-    }
+{
+  style: {
+    navigationStyle: 'custom',
+  },
+}
 </route>
 
 <template>
@@ -23,14 +23,10 @@
     </view>
     <view class="w-full absolute bottom-20 text-center">
       <view class="mb-4 mx-12">
-        <wd-button size="large" block @click="goToHome">
-          查看赛程
-        </wd-button>
+        <wd-button size="large" block @click="goToHome">查看赛程</wd-button>
       </view>
       <view class="mx-12">
-        <wd-button size="large" plain hairline block @click="goToTicket">
-          我的门票
-        </wd-button>
+        <wd-button size="large" plain hairline block @click="goToTicket">我的门票</wd-button>
       </view>
     </view>
   </view>
@@ -48,9 +44,8 @@ const detail = ref<any>(null)
 // 获取数据
 const fetchData = async () => {
   try {
-    toast.loading({ 
-      msg: '加载中...', 
-      position: 'middle',
+    toast.loading({
+      msg: '加载中...',
       direction: 'vertical',
       duration: 0,
     })
@@ -75,7 +70,7 @@ onLoad(async (options) => {
   id.value = options?.id
 })
 
-onShow(async() => fetchData())
+onShow(async () => fetchData())
 </script>
 
 <style>
