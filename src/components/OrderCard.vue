@@ -25,7 +25,11 @@ const props = defineProps<{ order: any }>()
 
 const goToDetail = () => {
   uni.navigateTo({
-    url: `/pages/order/detail?tid=${props.order.tid}`,
+    url: `/pages/order/detail?id=${props.order.id}`,
+    success: () => {
+      // 将订单信息传递给详情页
+      uni.$emit('orderData', props.order)
+    },
   })
 }
 </script>

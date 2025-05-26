@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { useToast } from 'wot-design-uni'
-import { getPayResult, payOrder } from '@/api/app'
+import { payOrder } from '@/api/app'
 
 const toast = useToast()
 

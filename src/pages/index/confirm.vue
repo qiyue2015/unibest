@@ -58,8 +58,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { getViewerList } from '@/api/viewer'
 import { useToast } from 'wot-design-uni'
 import { createOrder, getScheduleDetail, payOrder } from '@/api/app'
 
@@ -107,7 +105,33 @@ const selectViewers = () => {
   })
 }
 
+// 支付订单
+const onPayOrder = async (order: any) => {
+  console.log('支付订单:', order)
+  try {
+    const { data } = await payOrder(order.tid)
+    wx.requestPayment({
+      timeStamp: data.timeStamp,
+      nonceStr: data.nonceStr,
+      package: data.package,
+      signType: data.signType,
+      paySign: data.paySign,
+      complete() {
+        uni.redirectTo({ url: `/pages/order/detail?id=${order.id}` })
+      },
+    })
+  } catch (error) {
+    uni.redirectTo({ url: `/pages/order/detail?id=${order.id}` })
+  }
+}
+
 const submitOrder = async () => {
+  toast.loading({
+    msg: '正在创建订单...',
+    direction: 'vertical',
+    duration: 0,
+  })
+
   const { data } = await createOrder({
     schedule_id: scheduleId.value,
     viewers: viewers.value.map((v) => v.id),
@@ -118,13 +142,8 @@ const submitOrder = async () => {
     return
   }
 
-  toast.success({
-    msg: '订单创建成功',
-    duration: 1000,
-    closed: () => {
-      uni.navigateTo({ url: `/pages/order/pay?tid=${data.tid}` })
-    },
-  })
+  await onPayOrder(data)
+  toast.close()
 }
 
 onLoad((options) => {
