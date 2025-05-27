@@ -258,7 +258,6 @@ onLoad((options) => {
   }
 
   orderId.value = options.id
-  fetchData()
 
   // 监听来自其他页面传递的订单数据
   // 它的用处是为了在支付成功后返回到订单详情页面时，能够直接显示最新的订单信息
