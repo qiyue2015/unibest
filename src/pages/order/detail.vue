@@ -48,6 +48,9 @@
     <!-- 购买票品 -->
     <view class="mx-4 mb-4 rounded-xl overflow-hidden min-h-36">
       <wd-cell-group title="购买票品" border>
+        <template #value>
+          <text v-if="detail.status === 1" class="text-rose text-size-xs cursor-pointer" @click="onRefundOrder">申请退款</text>
+        </template>
         <view class="bg-gray-100 mx-4 mt-4 rounded-1 px-3 py-2">
           <view class="flex justify-between mb-2">
             <text>{{ detail.date }}</text>
@@ -142,10 +145,10 @@ function stopCountdown() {
 
 const fetchData = async () => {
   try {
-    toast.loading({ msg: '加载中...', direction: 'vertical', duration: 0 })
+    toast.loading({ msg: '订单加载中...', direction: 'vertical', duration: 0 })
     const { data } = await getOrderInfo(orderId.value)
     Object.assign(detail, data)
-    toast.close()
+
     if (detail.status === 0) {
       // 判断是否已超时，超时不再启动倒计时
       const created = new Date(detail.created_at.replace(/-/g, '/')).getTime()
@@ -161,6 +164,8 @@ const fetchData = async () => {
     } else {
       stopCountdown()
     }
+
+    toast.close()
   } catch {
     toast.error({ msg: '订单不存在', duration: 1000 })
     uni.redirectTo({ url: '/pages/order/index' })
@@ -172,8 +177,8 @@ const onCloseOrder = async () => {
   try {
     toast.loading({ msg: '正在关闭订单...', direction: 'vertical', duration: 0 })
     await closeOrder(detail.tid)
+    await fetchData()
     toast.success({ msg: '订单已关闭', duration: 1000 })
-    fetchData()
   } catch (error) {
     // toast.error({ msg: '关闭订单失败，请稍后再试' })
   }
@@ -217,6 +222,29 @@ const onCopyOrderId = () => {
   }
 }
 
+// 申请退款
+const onRefundOrder = async () => {
+  if (!detail.tid) return
+  uni.showModal({
+    title: '提示',
+    content: '确定要申请退款吗？',
+    confirmText: '申请退款',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          toast.loading({ msg: '正在申请退款...', direction: 'vertical', duration: 0 })
+          await closeOrder(detail.tid)
+          await fetchData()
+          toast.success({ msg: '退款申请已提交', duration: 1000 })
+        } catch (error) {
+          // toast.error({ msg: '申请退款失败，请稍后再试' })
+          toast.close()
+        }
+      }
+    },
+  })
+}
+
 onLoad((options) => {
   if (!options?.id) {
     toast.error({
@@ -230,8 +258,10 @@ onLoad((options) => {
   }
 
   orderId.value = options.id
+  fetchData()
 
   // 监听来自其他页面传递的订单数据
+  // 它的用处是为了在支付成功后返回到订单详情页面时，能够直接显示最新的订单信息
   uni.$on('orderData', (order) => {
     orderId.value = order.id
     Object.assign(detail, order)
