@@ -104,7 +104,10 @@
       "path": "pages/ticket/index",
       "type": "page",
       "style": {
-        "navigationBarTitleText": "门票"
+        "disableScroll": true,
+        "navigationBarTitleText": "我的票夹",
+        "navigationBarBackgroundColor": "#f5f5f5",
+        "backgroundColor": "#f5f5f5"
       }
     },
     {

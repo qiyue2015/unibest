@@ -13,3 +13,8 @@ export const getOrderInfo = (id: string) => {
 export const closeOrder = (tid: string) => {
   return http.post<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=order&op=close', { tid })
 }
+
+// 我的门票
+export const getMyTicket = (params: any) => {
+  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=ticket&op=me', params)
+}
