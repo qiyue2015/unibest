@@ -20,7 +20,7 @@
       <!-- 二维码位置 -->
       <view class="py-4">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
-          <view class="w-30 h-30 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
+          <view class="w-36 h-36 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
             <wd-img v-if="ticket.status === 1 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
             <text v-else class="text-gray-300">二维码不可用</text>
           </view>
