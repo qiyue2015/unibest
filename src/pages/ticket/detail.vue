@@ -100,7 +100,7 @@ const { socketConnect, socketClose, socketConnected } = useWebSocket({
   },
   onError() {
     wsReconnectCount.value++
-    if (wsReconnectCount.value > 5) {
+    if (wsReconnectCount.value >= 5) {
       wsFallbackToPolling.value = true
       startPolling()
     }
