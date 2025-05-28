@@ -75,21 +75,25 @@ import TicketStatus from '@/components/TicketStatus.vue'
 import { useWebSocket } from '@/hooks/useWebSocket'
 
 const ticketId = ref<string>('')
-const ticket = ref(null)
+const ticket = ref<any>(null)
 const qrcodeUrl = ref<string>('')
 
 const wsMsg = ref('')
 const wsReconnectCount = ref(0)
 const wsFallbackToPolling = ref(false)
-let pollingTimer: any = null
+let pollingTimer: ReturnType<typeof setInterval> | null = null
+let refreshTimer: ReturnType<typeof setInterval> | null = null
 
+// WebSocket 相关
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
   onMessage: (msg) => {
     if (msg.type === 'ticket_notify') {
       // 如果票已核销，关闭 WebSocket 连接
       if (msg.payload.status === 2) {
         socketClose()
-        ticket.value.status = msg.payload.status
+        if (ticket.value) {
+          ticket.value.status = 2
+        }
       }
     }
     wsMsg.value = msg.payload
@@ -103,6 +107,43 @@ const { socketConnect, socketClose, socketConnected } = useWebSocket({
   },
 })
 
+// 二维码刷新
+const refreshQrcode = () => {
+  if (ticket.value && ticket.value.qrcode) {
+    qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
+  }
+}
+
+// 跳转订单详情
+const goOrderDetail = () => {
+  if (ticket.value && ticket.value.order_id) {
+    uni.navigateTo({ url: `/pages/order/detail?id=${ticket.value.order_id}` })
+  }
+}
+
+// 统一清理所有副作用
+function cleanupAll() {
+  stopRefreshQrcode()
+  stopPolling()
+  socketClose()
+  uni.$off('ticketData')
+}
+
+// 启动二维码定时刷新，防止重复启动
+function startRefreshQrcode() {
+  stopRefreshQrcode()
+  refreshQrcode()
+  refreshTimer = setInterval(refreshQrcode, 10000)
+}
+
+function stopRefreshQrcode() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+    refreshTimer = null
+  }
+}
+
+// 轮询票据状态
 function startPolling() {
   stopPolling()
   pollingTimer = setInterval(async () => {
@@ -110,7 +151,6 @@ function startPolling() {
       const { data } = await getTicketInfo(ticketId.value)
       ticket.value = data
       wsMsg.value = '[HTTP] ' + JSON.stringify(data)
-      // 如果票已核销，停止轮询
       if (data.status === 2) {
         stopPolling()
       }
@@ -125,67 +165,46 @@ function stopPolling() {
   }
 }
 
+// 获取票据详情，仅做数据获取和赋值，不做副作用管理
 const fetchData = async () => {
   try {
     uni.showLoading({ title: '加载中...' })
     const { data } = await getTicketInfo(ticketId.value)
     ticket.value = data
-    // 未核销的票才需要连接 WebSocket
-    if (data.status === 1 && !wsFallbackToPolling.value) {
-      wsReconnectCount.value = 0
-      await socketConnect({
-        module: 'basketball',
-        query: {
-          ticket_id: ticketId.value,
-        },
-      })
-    } else if (data.status === 1 && wsFallbackToPolling.value) {
-      startPolling()
-    }
     refreshQrcode()
   } finally {
     uni.hideLoading()
   }
 }
 
-const goOrderDetail = () => {
-  if (ticket.value && ticket.value.order_id) {
-    uni.navigateTo({ url: `/pages/order/detail?id=${ticket.value.order_id}` })
-  }
-}
-
-const refreshQrcode = () => {
-  console.log('refreshQrcode')
-  if (ticket.value && ticket.value.qrcode) {
-    qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
-  }
-}
-
-let refreshTimer: any = null
-
+// 监听票据状态变化，统一管理通信方式和二维码刷新
 watch(
   () => ticket.value?.status,
-  (status) => {
+  async (status) => {
+    // 先清理所有副作用
+    stopPolling()
+    stopRefreshQrcode()
     if (status === 1) {
-      // 启动定时刷新二维码
-      refreshTimer = setInterval(() => {
-        refreshQrcode()
-      }, 10000)
-    } else {
-      if (refreshTimer) {
-        clearInterval(refreshTimer)
-        refreshTimer = null
+      if (!wsFallbackToPolling.value) {
+        wsReconnectCount.value = 0
+        await socketConnect({
+          module: 'basketball',
+          query: { ticket_id: ticketId.value },
+        })
+      } else {
+        startPolling()
       }
+      startRefreshQrcode()
     }
   },
   { immediate: true },
 )
 
-onLoad(async (options) => {
+onLoad((options) => {
   if (options.id) {
     ticketId.value = options.id
   }
-  uni.$on('ticketData', async (data) => {
+  uni.$on('ticketData', (data) => {
     ticket.value = data
   })
 })
@@ -198,16 +217,6 @@ onShow(async () => {
   }
 })
 
-onUnmounted(() => {
-  if (refreshTimer) {
-    clearInterval(refreshTimer)
-    refreshTimer = null
-  }
-  stopPolling()
-})
-
-onUnload(() => {
-  uni.$off('ticketData')
-  stopPolling()
-})
+onUnmounted(cleanupAll)
+onUnload(cleanupAll)
 </script>
