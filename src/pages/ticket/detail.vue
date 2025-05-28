@@ -48,10 +48,17 @@
       <!-- WebSocket 调试信息演示 -->
       <view class="mt-4 p-2 bg-gray-50 rounded text-left">
         <view class="mb-1 text-size-xs text-gray-400">
+          通信模式：
+          <text :style="{ color: wsFallbackToPolling ? 'orange' : 'green' }">
+            {{ wsFallbackToPolling ? 'HTTP 轮询' : 'WebSocket' }}
+          </text>
+        </view>
+        <view v-if="!wsFallbackToPolling" class="mb-1 text-size-xs text-gray-400">
           WebSocket 状态：
           <text :style="{ color: socketConnected ? 'green' : 'red' }">
             {{ socketConnected ? '已连接' : '未连接' }}
           </text>
+          <text class="ml-2">重连次数: {{ wsReconnectCount }}</text>
         </view>
         <view class="mb-1 text-size-xs text-gray-400">
           收到消息：
@@ -72,9 +79,12 @@ const ticket = ref(null)
 const qrcodeUrl = ref<string>('')
 
 const wsMsg = ref('')
+const wsReconnectCount = ref(0)
+const wsFallbackToPolling = ref(false)
+let pollingTimer: any = null
+
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
   onMessage: (msg) => {
-    console.log('WebSocket 收到消息:', msg)
     if (msg.type === 'ticket_notify') {
       // 如果票已核销，关闭 WebSocket 连接
       if (msg.payload.status === 2) {
@@ -84,24 +94,54 @@ const { socketConnect, socketClose, socketConnected } = useWebSocket({
     }
     wsMsg.value = msg.payload
   },
+  onError() {
+    wsReconnectCount.value++
+    if (wsReconnectCount.value > 5) {
+      wsFallbackToPolling.value = true
+      startPolling()
+    }
+  },
 })
+
+function startPolling() {
+  stopPolling()
+  pollingTimer = setInterval(async () => {
+    if (ticketId.value) {
+      const { data } = await getTicketInfo(ticketId.value)
+      ticket.value = data
+      wsMsg.value = '[HTTP] ' + JSON.stringify(data)
+      // 如果票已核销，停止轮询
+      if (data.status === 2) {
+        stopPolling()
+      }
+    }
+  }, 3000)
+}
+
+function stopPolling() {
+  if (pollingTimer) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
+  }
+}
 
 const fetchData = async () => {
   try {
     uni.showLoading({ title: '加载中...' })
     const { data } = await getTicketInfo(ticketId.value)
     ticket.value = data
-
     // 未核销的票才需要连接 WebSocket
-    if (data.status === 1) {
+    if (data.status === 1 && !wsFallbackToPolling.value) {
+      wsReconnectCount.value = 0
       await socketConnect({
         module: 'basketball',
         query: {
           ticket_id: ticketId.value,
         },
       })
+    } else if (data.status === 1 && wsFallbackToPolling.value) {
+      startPolling()
     }
-
     refreshQrcode()
   } finally {
     uni.hideLoading()
@@ -163,9 +203,11 @@ onUnmounted(() => {
     clearInterval(refreshTimer)
     refreshTimer = null
   }
+  stopPolling()
 })
 
 onUnload(() => {
   uni.$off('ticketData')
+  stopPolling()
 })
 </script>
