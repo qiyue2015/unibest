@@ -27,6 +27,11 @@
         <view class="text-size-xl">付款成功</view>
         <view class="text-gray text-size-sm">订单已支付成功</view>
       </template>
+      <!-- 2已使用 -->
+      <template v-if="detail.status === 2">
+        <view class="text-size-xl">已使用</view>
+        <view class="text-gray text-size-sm">订单已使用，感谢您的支持！</view>
+      </template>
       <!-- 3已退款 4退款失败 5未支付关闭 -->
       <template v-if="detail.status >= 3">
         <view class="text-size-xl">已关闭</view>
@@ -45,9 +50,9 @@
       </template>
     </view>
 
-    <!-- 购买票品 -->
+    <!-- 门票信息 -->
     <view class="mx-4 mb-4 rounded-xl overflow-hidden min-h-36">
-      <wd-cell-group title="购买票品" border>
+      <wd-cell-group title="门票信息" border>
         <template #value>
           <text v-if="detail.status === 1" class="text-rose text-size-xs cursor-pointer" @click="onRefundOrder">申请退款</text>
         </template>
@@ -68,7 +73,7 @@
     </view>
 
     <!-- 购买票品 -->
-    <view v-if="detail.status === 1" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
+    <view v-if="detail.status === 1 || detail.status === 2" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
       <wd-cell-group title="观演人门票" border>
         <template v-for="ticket in tickets" :key="ticket.id">
           <wd-cell :title="ticket.realname" :label="ticket.idcard" center is-link @click="goTicket(ticket)">
