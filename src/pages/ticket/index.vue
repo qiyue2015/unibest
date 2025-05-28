@@ -14,6 +14,7 @@
     <wd-tabs v-model="query.status" custom-class="m-tabs" auto-line-width swipeable @change="onChange">
       <block v-for="tab in tabs" :key="tab">
         <wd-tab :title="tab">
+          <wd-status-tip v-if="isEmpty" image="content" tip="暂无相关门票" />
           <block v-for="row in list" :key="row.id">
             <view class="mx-4 m-3 rounded-xl overflow-hidden" @click="goDetail(row)">
               <wd-cell-group use-slot>
@@ -37,7 +38,6 @@
         </wd-tab>
       </block>
     </wd-tabs>
-    <wd-status-tip v-if="isEmpty" image="content" tip="暂无可用门票" />
   </view>
 </template>
 
