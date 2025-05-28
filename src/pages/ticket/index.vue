@@ -15,16 +15,21 @@
       <block v-for="tab in tabs" :key="tab">
         <wd-tab :title="tab">
           <block v-for="row in list" :key="row.id">
-            <view class="mx-4 m-3 rounded-xl overflow-hidden">
-              <wd-cell-group :title="row.realname">
-                <template #title>{{ row.realname }} {{ row.idcard }}</template>
+            <view class="mx-4 m-3 rounded-xl overflow-hidden" @click="goDetail(row)">
+              <wd-cell-group use-slot>
+                <template #title>{{ row.schedule.date }}</template>
                 <template #value><ticket-status :status="row.status" /></template>
-                <view class="grid grid-cols-3 text-gray text-size-sm px-4 pb-4 min-h-10 items-center">
-                  <block v-for="item in row.schedule.venues" :key="item.id">
-                    <view>{{ row.schedule.date }}</view>
+                <view class="text-gray text-size-sm px-4 grid grid-cols-2 gap-8">
+                  <view v-for="item in row.schedule.venues" :key="item.id">
                     <view>{{ item.time }}</view>
                     <view class="whitespace-nowrap">{{ item.team }}</view>
-                  </block>
+                  </view>
+                </view>
+                <wd-divider dashed />
+                <view class="flex justify-between px-4 pb-4 font-size-sm text-gray">
+                  <text>{{ row.realname }}</text>
+                  <text>{{ row.mobile }}</text>
+                  <text>{{ row.idcard }}</text>
                 </view>
               </wd-cell-group>
             </view>
@@ -61,6 +66,15 @@ const onChange = ({ index }) => {
   query.status = index
   list.value = []
   fetchData()
+}
+
+const goDetail = (item: any) => {
+  uni.navigateTo({
+    url: `/pages/ticket/detail?id=${item.id}`,
+    success: () => {
+      uni.$emit('ticketData', item)
+    },
+  })
 }
 
 onShow(async () => {

@@ -10,6 +10,7 @@ interface NavigateToOptions {
        "/pages/login/index" |
        "/pages/order/detail" |
        "/pages/order/index" |
+       "/pages/ticket/detail" |
        "/pages/ticket/index" |
        "/pages/ucenter/index" |
        "/pages-sub/about/index" |
