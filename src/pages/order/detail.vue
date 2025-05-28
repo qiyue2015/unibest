@@ -12,7 +12,7 @@
 <template>
   <view class="main">
     <!-- 支付状态 -->
-    <view class="flex flex-col items-center justify-center gap-2 py-6 min-h-28">
+    <view class="flex flex-col items-center justify-center gap-2 py-4 min-h-20">
       <!-- 0待支付 -->
       <template v-if="detail.status === 0">
         <view class="text-size-xl">待支付</view>
@@ -25,7 +25,7 @@
       <!-- 1付款成功 -->
       <template v-if="detail.status === 1">
         <view class="text-size-xl">付款成功</view>
-        <view class="text-gray text-size-sm">订单已支付成功，电子门票可在订单详情中查看</view>
+        <view class="text-gray text-size-sm">订单已支付成功</view>
       </template>
       <!-- 3已退款 4退款失败 5未支付关闭 -->
       <template v-if="detail.status >= 3">
@@ -67,6 +67,17 @@
       </wd-cell-group>
     </view>
 
+    <!-- 购买票品 -->
+    <view v-if="detail.status === 1" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
+      <wd-cell-group title="观演人门票" border>
+        <template v-for="ticket in tickets" :key="ticket.id">
+          <wd-cell :title="ticket.realname" :label="ticket.idcard" center is-link @click="goTicket(ticket)">
+            <ticket-status :status="ticket.status" />
+          </wd-cell>
+        </template>
+      </wd-cell-group>
+    </view>
+
     <!-- 订单详情 -->
     <view class="mx-4 mb-4 rounded-xl overflow-hidden min-h-36">
       <wd-cell-group custom-class="order-detail" title="订单信息" border>
@@ -82,21 +93,25 @@
         <wd-cell title="联系手机" :value="detail.mobile" />
       </wd-cell-group>
     </view>
+
+    <wd-gap safe-area-bottom height="0" />
   </view>
 </template>
 
 <script lang="ts" setup>
 import { useToast } from 'wot-design-uni'
-import { closeOrder, getOrderInfo } from '@/api/order'
+import { closeOrder, getOrderInfo, getOrderTickets } from '@/api/order'
 import { payOrder } from '@/api/app'
+import TicketStatus from '@/components/TicketStatus.vue'
 
 const toast = useToast()
 const orderId = ref<string | null>(null)
 const detail = reactive({
+  id: undefined,
   tid: undefined,
   contact_name: '',
   mobile: '',
-  status: 0,
+  status: undefined,
   total_amount: '0.00',
   date: '',
   venues: [],
@@ -104,9 +119,13 @@ const detail = reactive({
   refund_at: '',
   created_at: '',
 })
-const countdownText = ref('请在09分59秒内完成支付，超时订单将会关闭')
+
+const ticketloading = ref(false)
+const tickets = ref<any[]>([])
+
 let countdownTimer: number | null = null
 const PAY_TIMEOUT = 10 * 60 // 10分钟，单位秒
+const countdownText = ref('请在09分59秒内完成支付，超时订单将会关闭')
 
 function updateCountdown() {
   if (!detail.created_at) {
@@ -149,6 +168,9 @@ const fetchData = async () => {
     const { data } = await getOrderInfo(orderId.value)
     Object.assign(detail, data)
 
+    // 获取门票信息
+    await fetchTickets()
+
     if (detail.status === 0) {
       // 判断是否已超时，超时不再启动倒计时
       const created = new Date(detail.created_at.replace(/-/g, '/')).getTime()
@@ -169,6 +191,17 @@ const fetchData = async () => {
   } catch {
     toast.error({ msg: '订单不存在', duration: 1000 })
     uni.redirectTo({ url: '/pages/order/index' })
+  }
+}
+
+const fetchTickets = async () => {
+  if (!detail.id || detail?.status === 0) return
+  ticketloading.value = true
+  try {
+    const { data } = await getOrderTickets(detail.id)
+    tickets.value = data || []
+  } finally {
+    ticketloading.value = false
   }
 }
 
@@ -245,22 +278,20 @@ const onRefundOrder = async () => {
   })
 }
 
+const goTicket = (item: any) => {
+  if (item && item.id) {
+    uni.navigateTo({ url: `/pages/ticket/detail?id=${item.id}` })
+  }
+}
+
 onLoad((options) => {
   if (!options?.id) {
-    toast.error({
-      msg: '订单ID不能为空',
-      duration: 1000,
-      closed() {
-        uni.navigateBack({ delta: 1 })
-      },
-    })
-    return
+    uni.navigateBack({ delta: 1 })
   }
 
   orderId.value = options.id
 
   // 监听来自其他页面传递的订单数据
-  // 它的用处是为了在支付成功后返回到订单详情页面时，能够直接显示最新的订单信息
   uni.$on('orderData', (order) => {
     orderId.value = order.id
     Object.assign(detail, order)

@@ -75,7 +75,6 @@ onShow(() => {
   queryParams.current = 1
   state.value = 'loading'
   list.value = []
-  console.log('onShow: 重置查询参数和状态')
   fetchData()
 })
 </script>

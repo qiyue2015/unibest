@@ -18,3 +18,14 @@ export const closeOrder = (tid: string) => {
 export const getMyTicket = (params: any) => {
   return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=ticket&op=me', params)
 }
+
+// 门票详情
+export const getTicketInfo = (id: string) => {
+  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=ticket&op=detail', { id })
+}
+
+// 订单下的门票
+// /app/index.php?c=entry&m=basketball&do=order&op=tickets
+export const getOrderTickets = (id: string) => {
+  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=order&op=tickets', { id })
+}
