@@ -19,7 +19,7 @@
       </view>
       <!-- 二维码位置 -->
       <view class="py-4">
-        <view class="w-36 h-36 m-auto rounded-lg bg-cover">
+        <view class="w-36 h-36 m-auto rounded-lg bg-cover" @click="refreshQrcode">
           <wd-img v-if="qrcodeUrl" lazy-load width="100%" height="100%" :src="qrcodeUrl" />
         </view>
         <view class="text-gray-500 text-size-sm mt-2">二维码实时更新 请勿截屏使用</view>
@@ -54,7 +54,6 @@ import TicketStatus from '@/components/TicketStatus.vue'
 
 const ticketId = ref<string>('')
 const ticket = ref<any>(null)
-const qrcodeLoading = ref<boolean>(true)
 const qrcodeUrl = ref<string>('')
 
 const fetchData = async () => {
@@ -63,9 +62,7 @@ const fetchData = async () => {
     const { data } = await getTicketInfo(ticketId.value)
     ticket.value = data
     // 每次获取后，更新时间戳
-    if (ticket.value && ticket.value.qrcode) {
-      qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
-    }
+    refreshQrcode()
   } finally {
     uni.hideLoading()
   }
@@ -77,6 +74,12 @@ const goOrderDetail = () => {
   }
 }
 
+const refreshQrcode = () => {
+  if (ticket.value && ticket.value.qrcode) {
+    qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
+  }
+}
+
 let refreshTimer: any = null
 
 watch(
@@ -85,9 +88,7 @@ watch(
     if (status === 1) {
       // 启动定时刷新二维码
       refreshTimer = setInterval(() => {
-        if (ticket.value && ticket.value.qrcode) {
-          qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
-        }
+        refreshQrcode()
       }, 10000)
     } else {
       if (refreshTimer) {
