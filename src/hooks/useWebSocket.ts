@@ -11,6 +11,11 @@ export function useWebSocket(options: UseWebSocketOptions) {
   const wsConnected = ref(false)
   let wsEventRegistered = false
   let lastQueryStr: string | undefined
+  let retryCount = 0
+  const maxRetries = 5
+  let retryTimer: ReturnType<typeof setTimeout> | null = null
+  let lastConnectOverride: { module: string; query?: Record<string, any> } | null = null
+  let retrying = false
 
   // 统一从 .env 读取 wsBaseUrl 和 uniacid
   const wsBaseUrl = import.meta.env.VITE_WEBSOCKET_URL
@@ -38,6 +43,10 @@ export function useWebSocket(options: UseWebSocketOptions) {
 
   function handleSocketOpen() {
     wsConnected.value = true
+    retryCount = 0
+    retrying = false
+    retryTimer && clearTimeout(retryTimer)
+    retryTimer = null
     options.onOpen && options.onOpen()
   }
   function handleSocketMessage(res: any) {
@@ -48,24 +57,57 @@ export function useWebSocket(options: UseWebSocketOptions) {
       console.error('WebSocket message parse error:', e)
     }
   }
+  // 在达到最大重试次数时清理定时器
   function handleSocketClose() {
     wsConnected.value = false
     options.onClose && options.onClose()
+    if (!retrying && retryCount < maxRetries && lastConnectOverride) {
+      retrying = true
+      retryCount++
+      retryTimer && clearTimeout(retryTimer)
+      retryTimer = setTimeout(() => {
+        retrying = false
+        connect(lastConnectOverride!)
+      }, 1000 * retryCount)
+    } else if (retryCount >= maxRetries) {
+      retryTimer && clearTimeout(retryTimer)
+      retryTimer = null
+      options.onError &&
+        options.onError({
+          message: 'WebSocket连接失败，已达最大重试次数',
+        })
+    }
   }
   function handleSocketError(err: any) {
     wsConnected.value = false
     options.onError && options.onError(err)
+    if (!retrying && retryCount < maxRetries && lastConnectOverride) {
+      retrying = true
+      retryCount++
+      retryTimer && clearTimeout(retryTimer)
+      retryTimer = setTimeout(() => {
+        retrying = false
+        connect(lastConnectOverride!)
+      }, 1000 * retryCount)
+    } else if (retryCount >= maxRetries) {
+      retryTimer && clearTimeout(retryTimer)
+      retryTimer = null
+      options.onError &&
+        options.onError({
+          message: 'WebSocket连接失败，已达最大重试次数',
+          error: err,
+        })
+    }
   }
-
+  // connect 前判断 lastConnectOverride，防止 close 后还重连
   async function connect(override: { module: string; query?: Record<string, any> }) {
-    const queryStr = getQueryStr(override)
-    if (!override.module || wsConnected.value) return
+    if (!override.module || wsConnected.value || retrying || retryCount >= maxRetries || lastConnectOverride === null) return
+    lastConnectOverride = override
     try {
       await uni.connectSocket({ url: buildUrl(override) })
-      lastQueryStr = queryStr
+      lastQueryStr = getQueryStr(override)
     } catch (e) {
-      options.onError && options.onError(e)
-      return
+      // 理论上不会进这里
     }
     if (!wsEventRegistered) {
       uni.onSocketOpen(handleSocketOpen)
@@ -83,14 +125,29 @@ export function useWebSocket(options: UseWebSocketOptions) {
   }
 
   function close() {
+    if (retryTimer) {
+      clearTimeout(retryTimer)
+      retryTimer = null
+    }
+    retrying = false
     if (wsConnected.value) {
       uni.closeSocket({ code: 1000, reason: '页面卸载关闭' })
     }
     wsConnected.value = false
+    retryCount = 0
+    lastConnectOverride = null
   }
 
   onUnmounted(() => {
     close()
+    // 解绑全局事件，防止内存泄漏
+    if (wsEventRegistered) {
+      uni.offSocketOpen && uni.offSocketOpen(handleSocketOpen)
+      uni.offSocketMessage && uni.offSocketMessage(handleSocketMessage)
+      uni.offSocketClose && uni.offSocketClose(handleSocketClose)
+      uni.offSocketError && uni.offSocketError(handleSocketError)
+      wsEventRegistered = false
+    }
   })
 
   return {
