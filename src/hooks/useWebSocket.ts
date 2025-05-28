@@ -101,13 +101,29 @@ export function useWebSocket(options: UseWebSocketOptions) {
   }
   // connect 前判断 lastConnectOverride，防止 close 后还重连
   async function connect(override: { module: string; query?: Record<string, any> }) {
-    if (!override.module || wsConnected.value || retrying || retryCount >= maxRetries || lastConnectOverride === null) return
+    if (!override.module) {
+      console.log('[WebSocket] connect return: !override.module', override)
+      return
+    }
+    if (wsConnected.value) {
+      console.log('[WebSocket] connect return: wsConnected.value = true')
+      return
+    }
+    if (retrying) {
+      console.log('[WebSocket] connect return: retrying = true')
+      return
+    }
+    if (retryCount >= maxRetries) {
+      console.log('[WebSocket] connect return: retryCount >= maxRetries')
+      return
+    }
     lastConnectOverride = override
     try {
       await uni.connectSocket({ url: buildUrl(override) })
       lastQueryStr = getQueryStr(override)
+      console.log('[WebSocket] connectSocket called', buildUrl(override))
     } catch (e) {
-      // 理论上不会进这里
+      console.log('[WebSocket] connectSocket error', e)
     }
     if (!wsEventRegistered) {
       uni.onSocketOpen(handleSocketOpen)
@@ -115,6 +131,7 @@ export function useWebSocket(options: UseWebSocketOptions) {
       uni.onSocketClose(handleSocketClose)
       uni.onSocketError(handleSocketError)
       wsEventRegistered = true
+      console.log('[WebSocket] wsEventRegistered = true')
     }
   }
 
@@ -140,14 +157,6 @@ export function useWebSocket(options: UseWebSocketOptions) {
 
   onUnmounted(() => {
     close()
-    // 解绑全局事件，防止内存泄漏
-    if (wsEventRegistered) {
-      uni.offSocketOpen && uni.offSocketOpen(handleSocketOpen)
-      uni.offSocketMessage && uni.offSocketMessage(handleSocketMessage)
-      uni.offSocketClose && uni.offSocketClose(handleSocketClose)
-      uni.offSocketError && uni.offSocketError(handleSocketError)
-      wsEventRegistered = false
-    }
   })
 
   return {
