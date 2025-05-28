@@ -20,12 +20,17 @@
       <!-- 二维码位置 -->
       <view class="py-4">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
-          <wd-img v-if="qrcodeUrl" lazy-load :width="160" :height="160" :src="qrcodeUrl" />
+          <view class="w-30 h-30 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
+            <wd-img v-if="ticket.status === 1 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
+            <text v-else class="text-gray-300">二维码不可用</text>
+          </view>
         </view>
-        <view class="text-gray-500 text-size-sm mt-2">二维码实时更新 请勿截屏使用</view>
+        <view v-if="ticket.status === 1" class="text-size-sm mt-2 text-green-600">二维码实时更新 请勿截屏使用</view>
+        <view v-if="ticket.status === 2" class="text-size-sm mt-2 text-gray-400">门票已使用</view>
+        <view v-if="ticket.status === 3" class="text-size-sm mt-2 text-red-500">门票已过期</view>
       </view>
 
-      <!-- 票品信息 -->
+      <!-- 门票信息 -->
       <view class="bg-gray-50 rounded-lg mt-4">
         <view class="flex items-center justify-between mb-2 mx-4 pt-4">
           <text>{{ ticket.schedule.date }}</text>
@@ -38,6 +43,11 @@
           </view>
         </view>
         <wd-divider dashed />
+        <view class="flex justify-between font-size-sm text-gray pb-4 px-4">
+          <text>持票人信息</text>
+          <text></text>
+          <text></text>
+        </view>
         <view class="flex justify-between font-size-sm text-gray pb-4 px-4">
           <text>{{ ticket.realname }}</text>
           <text>{{ ticket.mobile }}</text>
