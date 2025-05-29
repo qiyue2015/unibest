@@ -12,8 +12,8 @@ export default defineUniPages({
     autoscan: true,
     custom: {
       '^wd-(.*)': 'wot-design-uni/components/wd-$1/wd-$1.vue',
-      '^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)':
-        'z-paging/components/z-paging$1/z-paging$1.vue',
+      '^(?!z-paging-refresh|z-paging-load-more)z-paging(.*)': 'z-paging/components/z-paging$1/z-paging$1.vue',
+      '^xc-(.*)': '@/components/xc-$1/index.vue',
     },
   },
   // 如果不需要tabBar，可以注释掉这个配置，或者直接删除
