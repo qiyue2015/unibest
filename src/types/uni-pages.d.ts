@@ -14,10 +14,8 @@ interface NavigateToOptions {
        "/pages/ticket/index" |
        "/pages/ucenter/index" |
        "/pages-sub/about/index" |
-       "/pages-sub/agreement/index" |
        "/pages-sub/help/index" |
        "/pages-sub/setting/index" |
-       "/pages-sub/verify/index" |
        "/pages-sub/viewer/choose" |
        "/pages-sub/viewer/create" |
        "/pages-sub/viewer/index";

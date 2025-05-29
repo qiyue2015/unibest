@@ -143,13 +143,6 @@
           }
         },
         {
-          "path": "agreement/index",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "用户协议"
-          }
-        },
-        {
           "path": "help/index",
           "type": "page",
           "style": {
@@ -161,13 +154,6 @@
           "type": "page",
           "style": {
             "navigationBarTitleText": "设置"
-          }
-        },
-        {
-          "path": "verify/index",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "实名认证"
           }
         },
         {
