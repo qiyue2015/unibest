@@ -18,7 +18,7 @@ onShow(async () => {
     await userStore.checkSessionid()
   } else {
     // 获取用户信息
-    await userStore.getUserInfo()
+    // await userStore.getUserInfo()
   }
   // 版本更新检查
   checkUpdate()
