@@ -1,6 +1,5 @@
 <route lang="json5">
 {
-  needLogin: true,
   style: {
     disableScroll: true,
     navigationBarTitleText: '确认订单',

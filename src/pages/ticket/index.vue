@@ -57,6 +57,9 @@ const fetchData = async () => {
     const { data } = await getMyTicket(query)
     isEmpty.value = data.length === 0
     list.value = data
+  } catch (error) {
+    isEmpty.value = true
+    console.error('获取门票数据失败:', error)
   } finally {
     uni.hideLoading()
   }

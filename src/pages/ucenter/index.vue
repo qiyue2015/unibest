@@ -20,12 +20,12 @@
       <view class="w-full pt-4 pb-4 flex justify-between items-center">
         <view class="flex items-center">
           <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
-          <view class="ml-2" @click="goSetting">
+          <view class="ml-2" @click="goTo('/pages/login/index', false)">
             <view class="text-base font-bold text-black">{{ userInfo.nickname }}</view>
             <view class="text-sm text-gray-500">{{ userInfo.mobile }}</view>
           </view>
         </view>
-        <wd-button icon="edit-outline" type="icon" @click="goTo('/pages-sub/setting/index', true)" />
+        <!-- <wd-button icon="edit-outline" type="icon" @click="goTo('/pages-sub/setting/index', true)" /> -->
       </view>
 
       <!-- 功能入口区域 -->
@@ -45,7 +45,7 @@
       </view>
 
       <!-- 菜单列表 -->
-      <view class="rounded-xl overflow-hidden">
+      <!-- <view class="rounded-xl overflow-hidden">
         <wd-cell-group border>
           <block v-for="item in menuList" :key="item.title">
             <wd-cell
@@ -62,10 +62,10 @@
             </wd-cell>
           </block>
         </wd-cell-group>
-      </view>
+      </view> -->
 
       <!-- 设置 -->
-      <view class="rounded-xl overflow-hidden">
+      <!-- <view class="rounded-xl overflow-hidden">
         <wd-cell-group border>
           <wd-cell title="设置" size="large" is-link center @click="goTo('/pages-sub/setting/index', true)">
             <template #icon>
@@ -73,7 +73,7 @@
             </template>
           </wd-cell>
         </wd-cell-group>
-      </view>
+      </view> -->
     </view>
   </view>
 </template>
@@ -101,20 +101,20 @@ const userInfo = computed(() => {
   }
 })
 
-const menuList = [
-  {
-    title: '帮助与客服',
-    icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
-    url: '/pages-sub/help/index',
-    need_login: false,
-  },
-  {
-    title: '关于我们',
-    icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
-    url: '/pages-sub/about/index',
-    need_login: false,
-  },
-]
+// const menuList = [
+//   {
+//     title: '帮助与客服',
+//     icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
+//     url: '/pages-sub/help/index',
+//     need_login: false,
+//   },
+//   {
+//     title: '关于我们',
+//     icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
+//     url: '/pages-sub/about/index',
+//     need_login: false,
+//   },
+// ]
 
 // 封装跳转
 const goTo = (url: string, needLogin = true) => {
@@ -142,7 +142,9 @@ const goTo = (url: string, needLogin = true) => {
 const goOrder = () => goTo('/pages/order/index', true)
 
 // 设置
-const goSetting = () => goTo('/pages-sub/setting/index', true)
+const goSetting = () => {
+  // goTo('/pages-sub/setting/index', true)
+}
 
 onLoad(() => {})
 </script>

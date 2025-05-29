@@ -45,6 +45,12 @@ const onLogin = async () => {
   }
 }
 
+// 取消登录
+const onCancelLogin = () => {
+  userStore.clearUserInfo()
+  uni.switchTab({ url: '/pages/index/index' })
+}
+
 // 获取用户信息
 const fetchUserInfo = async () => {
   try {
@@ -128,21 +134,20 @@ const handleOpenPrivacyContract = () => {
 </script>
 
 <template>
-  <view class="main flex flex-col items-center">
+  <view class="main flex flex-col items-center justify-between">
     <!-- #ifdef MP-WEIXIN -->
     <xc-privacy-popup></xc-privacy-popup>
     <!-- #endif -->
+    <view class="w-full flex-1">
+      <view class="text-center my-20">
+        <image
+          src="https://wx.qlogo.cn/mmhead/McYMgia19V0UZvyQQ38YTib9vzXiaaPUtKwQbSNAT6qmK8BwqsFf8iaGAqicedqRI1VxYvJxk2ofQRYU/0"
+          class="w-20 h-20 bg-white rounded-full"
+          mode="aspectFill"
+        />
+        <view class="text-gray-500 text-sm mt-2">凉山州蓝球协会</view>
+      </view>
 
-    <view class="text-center my-10">
-      <image
-        src="https://wx.qlogo.cn/mmhead/McYMgia19V0UZvyQQ38YTib9vzXiaaPUtKwQbSNAT6qmK8BwqsFf8iaGAqicedqRI1VxYvJxk2ofQRYU/0"
-        class="w-20 h-20 bg-white rounded-full"
-        mode="aspectFill"
-      />
-      <view class="text-gray-500 text-sm mt-2">凉山州蓝球协会</view>
-    </view>
-
-    <view class="w-full">
       <view class="mx-20">
         <view></view>
         <view v-if="!userInfo?.mobile && agree" class="rounded-full overflow-hidden">
@@ -151,14 +156,20 @@ const handleOpenPrivacyContract = () => {
         <view v-else class="rounded-full overflow-hidden">
           <button type="primary" block @click="onLogin">登录</button>
         </view>
+        <view class="mt4">
+          <wd-button type="info" size="large" block @click="onCancelLogin">取消登陆</wd-button>
+        </view>
       </view>
     </view>
+
     <view class="flex items-center mb-2 mt-6">
-      <wd-checkbox v-model="agree" @change="onAgreeChange">我已阅读并同意</wd-checkbox>
+      <wd-checkbox v-model="agree" @change="onAgreeChange">已阅读并同意</wd-checkbox>
       <text class="text-blue-500 mx-1" style="font-size: var(--wot-checkbox-label-fs, 14px)" @click="handleOpenPrivacyContract">
         《用户隐私协议》
       </text>
     </view>
+
+    <wd-gap safe-area-bottom height="0" />
   </view>
 </template>
 

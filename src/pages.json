@@ -65,7 +65,6 @@
     {
       "path": "pages/index/confirm",
       "type": "page",
-      "needLogin": true,
       "style": {
         "disableScroll": true,
         "navigationBarTitleText": "确认订单",
