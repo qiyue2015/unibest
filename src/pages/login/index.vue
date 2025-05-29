@@ -85,6 +85,10 @@ onShow(() => {
 
 <template>
   <view class="main flex flex-col items-center">
+    <!-- #ifdef MP-WEIXIN -->
+    <xc-privacy-popup></xc-privacy-popup>
+    <!-- #endif -->
+
     <view class="text-center my-20">
       <image src="/static/images/avatar.png" class="w-20 h-20 rounded-full mb-2" mode="aspectFill" />
       <view class="text-gray-500 text-sm">凉山州蓝球协会</view>
