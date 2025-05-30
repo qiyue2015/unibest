@@ -17,7 +17,7 @@
 
     <view class="z-36 mx-4 flex flex-col gap-4">
       <!-- 顶部头像昵称区域 -->
-      <view class="w-full py-6 flex justify-between items-center">
+      <view class="w-full pt-6 pb-4 flex justify-between items-center">
         <view class="flex items-center">
           <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
           <view class="ml-2" @click="goTo('/pages/login/index', false)">
@@ -38,24 +38,24 @@
             </navigator>
           </template>
           <wd-grid :gutter="10" :column="4" clickable>
-            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=0" text="待支付" use-icon-slot>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=1" text="待支付" use-icon-slot>
               <template #icon>
-                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+                <image src="/static/images/order-status-0.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=1" text="待使用" use-icon-slot>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=2" text="待使用" use-icon-slot>
               <template #icon>
-                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+                <image src="/static/images/order-status-1.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=2" text="已使用" use-icon-slot>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=3" text="已使用" use-icon-slot>
               <template #icon>
-                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+                <image src="/static/images/order-status-2.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=3" text="退款" use-icon-slot>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=4" text="退款" use-icon-slot>
               <template #icon>
-                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+                <image src="/static/images/order-status-3.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
           </wd-grid>
@@ -66,13 +66,21 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group title="我的服务" border>
           <wd-grid :gutter="10" :column="4" icon-size="36px" clickable>
-            <template v-for="item in menuList" :key="item.title">
-              <wd-grid-item :text="item.title" use-icon-slot @itemclick="goTo(item.url, true)">
-                <template #icon>
-                  <image :src="item.icon" class="slot-img" mode="aspectFill" />
-                </template>
-              </wd-grid-item>
-            </template>
+            <wd-grid-item text="常用观演人" use-icon-slot @itemclick="goTo('/pages-sub/viewer/index', true)">
+              <template #icon>
+                <image src="/static/images/viewer.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+            <wd-grid-item text="帮助与客服" use-icon-slot @itemclick="goTo('/pages-sub/help/index', true)">
+              <template #icon>
+                <image src="/static/images/help.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+            <wd-grid-item text="用户隐私协议" use-icon-slot @itemclick="goTo(uni.openPrivacyContract(), true)">
+              <template #icon>
+                <image src="/static/images/privacy.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
           </wd-grid>
         </wd-cell-group>
       </view>
@@ -102,27 +110,6 @@ const userInfo = computed(() => {
     mobile: userStore.userInfo.mobile || '开启您的快乐时光',
   }
 })
-
-const menuList = [
-  {
-    title: '常用观演人',
-    icon: 'https://mp-img1.wifixc.com/static/images/viewerHL.svg',
-    url: '/pages-sub/viewer/index',
-    need_login: true,
-  },
-  {
-    title: '帮助与客服',
-    icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
-    url: '/pages-sub/help/index',
-    need_login: false,
-  },
-  {
-    title: '用户隐私协议',
-    icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
-    url: () => uni.openPrivacyContract(),
-    need_login: false,
-  },
-]
 
 // 封装跳转
 const goTo = (url: any, needLogin = true) => {

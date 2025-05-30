@@ -28,16 +28,16 @@ import { LoadMoreState } from 'wot-design-uni/components/wd-loadmore/types'
 import { getOrderList } from '@/api/order'
 import OrderCard from '@/components/OrderCard.vue'
 
-const active = ref(0)
+const active = ref(1)
 const tabs = reactive([
-  { title: '全部', value: 'all' },
-  { title: '待支付', value: '0' },
-  { title: '待使用', value: '1' },
-  { title: '已完成', value: '2' },
-  { title: '已关闭', value: '3' },
+  { title: '全部', value: 0 },
+  { title: '待支付', value: 1 },
+  { title: '待使用', value: 2 },
+  { title: '已完成', value: 3 },
+  { title: '已关闭', value: 4 },
 ])
 
-const queryParams = reactive({ status: 'all', current: 1, pageSize: 10 })
+const queryParams = reactive({ status: 1, current: 1, pageSize: 10 })
 const list = ref<any[]>([])
 const state = ref<LoadMoreState>('loading')
 
@@ -67,6 +67,14 @@ const onChange = ({ index }) => {
 // 计算是否为空
 const isEmpty = computed(() => {
   return list.value.length === 0 && state.value === 'finished'
+})
+
+onLoad((options) => {
+  active.value = options.status ? Number(options.status) : 1
+  queryParams.status = active.value
+  queryParams.current = 1
+  state.value = 'loading'
+  list.value = []
 })
 
 onShow(() => {
