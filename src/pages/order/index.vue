@@ -15,7 +15,6 @@
         <scroll-view scroll-y @scrolltolower="fetchData">
           <order-card v-for="row in list" :key="row.id" :order="row" />
           <wd-status-tip v-if="isEmpty" image="content" tip="暂无相关订单" />
-          <wd-loadmore v-if="state === 'loading'" :state="state" />
           <wd-gap safe-area-bottom height="0" />
         </scroll-view>
       </wd-tab>
@@ -43,25 +42,20 @@ const state = ref<LoadMoreState>('loading')
 
 const fetchData = async () => {
   try {
+    uni.showLoading({ title: '加载中…', mask: true })
     const { data } = await getOrderList(queryParams)
     queryParams.current += 1
     list.value = [...list.value, ...data]
-    if (data.length === 0 || data.length < queryParams.pageSize) {
-      state.value = 'finished'
-    } else {
-      state.value = 'loading'
-    }
+    uni.hideLoading()
   } catch {
     state.value = 'error'
   }
 }
 
 const onChange = ({ index }) => {
-  queryParams.status = tabs[index]?.value
-  queryParams.current = 1
-  state.value = 'loading'
-  list.value = []
-  fetchData()
+  uni.redirectTo({
+    url: `/pages/order/index?status=${tabs[index].value}`,
+  })
 }
 
 // 计算是否为空
@@ -73,13 +67,11 @@ onLoad((options) => {
   active.value = options.status ? Number(options.status) : 1
   queryParams.status = active.value
   queryParams.current = 1
-  state.value = 'loading'
   list.value = []
 })
 
 onShow(() => {
   queryParams.current = 1
-  state.value = 'loading'
   list.value = []
   fetchData()
 })
