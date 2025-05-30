@@ -42,17 +42,25 @@ const state = ref<LoadMoreState>('loading')
 
 const fetchData = async () => {
   try {
+    state.value = 'loading'
     uni.showLoading({ title: '加载中…', mask: true })
     const { data } = await getOrderList(queryParams)
     queryParams.current += 1
     list.value = [...list.value, ...data]
+    if (data.length === 0 || data.length < queryParams.pageSize) {
+      state.value = 'finished'
+    } else {
+      state.value = 'loading'
+    }
     uni.hideLoading()
   } catch {
+    uni.hideLoading()
     state.value = 'error'
   }
 }
 
 const onChange = ({ index }) => {
+  list.value = []
   uni.redirectTo({
     url: `/pages/order/index?status=${tabs[index].value}`,
   })
