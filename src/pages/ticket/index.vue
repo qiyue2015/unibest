@@ -3,8 +3,6 @@
   style: {
     disableScroll: true,
     navigationBarTitleText: '我的票夹',
-    navigationBarBackgroundColor: '#f5f5f5',
-    backgroundColor: '#f5f5f5',
   },
 }
 </route>

@@ -10,7 +10,7 @@
 <template>
   <view class="min-h-screen relative">
     <block v-if="isEmpty">
-      <wd-status-tip image="search" tip="暂无观众演人信息" />
+      <wd-status-tip image="search" tip="暂无观演人信息" />
     </block>
     <view v-else class="flex flex-col gap-4 m-4">
       <view v-for="(item, index) in list" :key="index" class="rounded-xl overflow-hidden">
@@ -28,7 +28,7 @@
       </view>
     </view>
     <view class="mx-4 fixed left-0 right-0 bottom-0 z-10 safe-area-inset-bottom">
-      <wd-button type="primary" size="large" block @click="addViewer">新增观众演人</wd-button>
+      <wd-button type="primary" size="large" block @click="addViewer">新增观演人</wd-button>
     </view>
   </view>
 </template>

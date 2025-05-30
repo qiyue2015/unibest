@@ -4,8 +4,6 @@
   style: {
     disableScroll: true,
     navigationBarTitleText: '门票详情',
-    navigationBarBackgroundColor: '#f5f5f5',
-    backgroundColor: '#f5f5f5',
   },
 }
 </route>
@@ -14,13 +12,13 @@
   <view v-if="ticket" class="h-screen overflow-hidden">
     <view class="rounded-xl overflow-hidden m-4 p-4 text-center bg-white flex flex-col rounded">
       <view class="text-left text-gray-300 text-size-xs mb-4 flex items-center justify-between">
-        <text>票号 {{ ticket.id }}</text>
+        <text>票号 {{ ticket.code }}</text>
         <text class="cursor-pointer text-blue-500" @click="goOrderDetail">订单详情</text>
       </view>
       <!-- 二维码位置 -->
       <view class="py-4">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
-          <view class="w-36 h-36 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
+          <view class="w-38 h-38 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
             <wd-img v-if="ticket.status === 1 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
             <text v-else class="text-gray-300">二维码不可用</text>
           </view>
@@ -43,7 +41,7 @@
           </view>
         </view>
         <wd-divider dashed />
-        <view class="flex justify-between font-size-sm text-gray pb-4 px-4">
+        <view class="flex justify-between font-size-sm pb-2 px-4">
           <text>持票人信息</text>
           <text></text>
           <text></text>

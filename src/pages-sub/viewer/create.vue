@@ -133,7 +133,7 @@ onLoad(({ viewer }) => {
     >
       <view class="flex flex-col gap-4">
         <view class="rounded-xl overflow-hidden">
-          <wd-cell-group title="观众演人信息" border>
+          <wd-cell-group title="观演人信息" border>
             <template #value>
               <text v-if="viewerId" class="text-red" @click="onDeleteViewer(viewerId)">删除</text>
             </template>

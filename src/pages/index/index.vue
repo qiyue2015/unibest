@@ -3,8 +3,6 @@
   style: {
     disableScroll: true,
     navigationBarTitleText: '赛程',
-    navigationBarBackgroundColor: '#f5f5f5',
-    backgroundColor: '#f5f5f5',
   },
 }
 </route>
@@ -76,7 +74,6 @@ onShow(() => {
 <style lang="scss" scoped>
 :deep(.wd-tabs.m-tabs) {
   background: #f5f5f5;
-  height: 100vh;
   .wd-tabs__nav {
     background: #f5f5f5;
   }

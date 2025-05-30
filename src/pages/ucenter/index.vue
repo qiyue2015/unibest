@@ -2,7 +2,7 @@
 {
   style: {
     navigationStyle: 'custom',
-    navigationBarTitleText: '我的',
+    navigationBarTitleText: '个人中心',
   },
 }
 </route>
@@ -11,13 +11,13 @@
   <view class="main flex flex-col relative box-border">
     // #ifdef MP-WEIXIN
     <view class="box-border w-full center" :style="headerStyle">
-      <view class="text-lg font-bold text-black w-full text-center">我的</view>
+      <view class="text-lg font-bold text-black w-full text-center">个人中心</view>
     </view>
     // #endif
 
     <view class="z-36 mx-4 flex flex-col gap-4">
       <!-- 顶部头像昵称区域 -->
-      <view class="w-full pt-4 pb-4 flex justify-between items-center">
+      <view class="w-full py-6 flex justify-between items-center">
         <view class="flex items-center">
           <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
           <view class="ml-2" @click="goTo('/pages/login/index', false)">
@@ -25,55 +25,57 @@
             <view class="text-sm text-gray-500">{{ userInfo.mobile }}</view>
           </view>
         </view>
-        <!-- <wd-button icon="edit-outline" type="icon" @click="goTo('/pages-sub/setting/index', true)" /> -->
+        <wd-button icon="setting" size="large" type="icon" @click="goTo('/pages-sub/setting/index', true)" />
       </view>
 
       <!-- 功能入口区域 -->
       <view class="rounded-xl overflow-hidden">
-        <wd-cell-group border>
-          <wd-cell title="我的订单" size="large" is-link center @click="goOrder">
-            <template #icon>
-              <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
-            </template>
-          </wd-cell>
-          <wd-cell title="常用观演人" size="large" is-link center @click="goTo('/pages-sub/viewer/index', true)">
-            <template #icon>
-              <image src="https://mp-img1.wifixc.com/static/images/viewerHL.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
-            </template>
-          </wd-cell>
+        <wd-cell-group title="订单中心" border>
+          <template #value>
+            <navigator class="font-normal text-gray" hover-class="none" url="/pages/order/index" open-type="navigate">
+              查看全部
+              <wd-icon name="arrow-right"></wd-icon>
+            </navigator>
+          </template>
+          <wd-grid :gutter="10" :column="4" clickable>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=0" text="待支付" use-icon-slot>
+              <template #icon>
+                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=1" text="待使用" use-icon-slot>
+              <template #icon>
+                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=2" text="已使用" use-icon-slot>
+              <template #icon>
+                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=3" text="退款" use-icon-slot>
+              <template #icon>
+                <image src="https://mp-img1.wifixc.com/static/images/dingdan.svg" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
+          </wd-grid>
         </wd-cell-group>
       </view>
 
       <!-- 菜单列表 -->
-      <!-- <view class="rounded-xl overflow-hidden">
-        <wd-cell-group border>
-          <block v-for="item in menuList" :key="item.title">
-            <wd-cell
-              :title="item.title"
-              :center="true"
-              size="large"
-              is-link
-              @click="goTo(item.url, item.need_login)"
-              class="menu-card"
-            >
-              <template #icon>
-                <image :src="item.icon" class="w-8 h-8 mr-3" mode="aspectFill" />
-              </template>
-            </wd-cell>
-          </block>
-        </wd-cell-group>
-      </view> -->
-
-      <!-- 设置 -->
-      <!-- <view class="rounded-xl overflow-hidden">
-        <wd-cell-group border>
-          <wd-cell title="设置" size="large" is-link center @click="goTo('/pages-sub/setting/index', true)">
-            <template #icon>
-              <image src="https://mp-img1.wifixc.com/static/images/shezhi.svg" class="w-8 h-8 mr-3" mode="aspectFill" />
+      <view class="rounded-xl overflow-hidden">
+        <wd-cell-group title="我的服务" border>
+          <wd-grid :gutter="10" :column="4" icon-size="36px" clickable>
+            <template v-for="item in menuList" :key="item.title">
+              <wd-grid-item :text="item.title" use-icon-slot @itemclick="goTo(item.url, true)">
+                <template #icon>
+                  <image :src="item.icon" class="slot-img" mode="aspectFill" />
+                </template>
+              </wd-grid-item>
             </template>
-          </wd-cell>
+          </wd-grid>
         </wd-cell-group>
-      </view> -->
+      </view>
     </view>
   </view>
 </template>
@@ -101,23 +103,33 @@ const userInfo = computed(() => {
   }
 })
 
-// const menuList = [
-//   {
-//     title: '帮助与客服',
-//     icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
-//     url: '/pages-sub/help/index',
-//     need_login: false,
-//   },
-//   {
-//     title: '关于我们',
-//     icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
-//     url: '/pages-sub/about/index',
-//     need_login: false,
-//   },
-// ]
+const menuList = [
+  {
+    title: '常用观演人',
+    icon: 'https://mp-img1.wifixc.com/static/images/viewerHL.svg',
+    url: '/pages-sub/viewer/index',
+    need_login: true,
+  },
+  {
+    title: '帮助与客服',
+    icon: 'https://mp-img1.wifixc.com/static/images/kefu.svg',
+    url: '/pages-sub/help/index',
+    need_login: false,
+  },
+  {
+    title: '用户隐私协议',
+    icon: 'https://mp-img1.wifixc.com/static/images/about.svg',
+    url: () => uni.openPrivacyContract(),
+    need_login: false,
+  },
+]
 
 // 封装跳转
-const goTo = (url: string, needLogin = true) => {
+const goTo = (url: any, needLogin = true) => {
+  if (typeof url === 'function') {
+    url()
+    return
+  }
   // 如果需要登录且用户未登录
   if (needLogin && !userStore.isLogined) {
     message
@@ -159,5 +171,11 @@ page,
   background-position: top center;
   background-repeat: no-repeat;
   background-color: #f7f7f7;
+}
+
+.slot-img {
+  height: 26px;
+  width: 26px;
+  overflow: hidden;
 }
 </style>

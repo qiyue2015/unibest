@@ -3,8 +3,6 @@
   style: {
     disableScroll: true,
     navigationBarTitleText: '确认订单',
-    navigationBarBackgroundColor: '#f5f5f5',
-    backgroundColor: '#f5f5f5',
   },
 }
 </route>
