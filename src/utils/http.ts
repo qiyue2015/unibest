@@ -26,7 +26,7 @@ export const http = <T>(options: CustomRequestOptions) => {
         } else if (result.errno === 41009) {
           const userStore = useUserStore()
           userStore.clearUserInfo()
-          // uni.navigateTo({ url: '/pages/login/index' })
+          uni.navigateTo({ url: '/pages/login/index' })
           reject(res)
         } else {
           // 其他错误 -> 根据后端错误信息轻提示
