@@ -2,7 +2,7 @@
 {
   style: {
     disableScroll: true,
-    navigationBarTitleText: '赛程',
+    navigationBarTitleText: '赛程安排',
   },
 }
 </route>

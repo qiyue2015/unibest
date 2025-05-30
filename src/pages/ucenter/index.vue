@@ -17,7 +17,7 @@
 
     <view class="z-36 mx-4 flex flex-col gap-4">
       <!-- 顶部头像昵称区域 -->
-      <view class="w-full pt-6 pb-4 flex justify-between items-center">
+      <view class="w-full pt-6 flex justify-between items-center">
         <view class="flex items-center">
           <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
           <view class="ml-2" @click="goTo('/pages/login/index', false)">
@@ -53,7 +53,7 @@
                 <image src="/static/images/order-status-2.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=4" text="退款" use-icon-slot>
+            <wd-grid-item link-type="navigateTo" url="/pages/order/index?status=4" text="已关闭" use-icon-slot>
               <template #icon>
                 <image src="/static/images/order-status-3.svg" class="slot-img" mode="aspectFill" />
               </template>
@@ -66,17 +66,17 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group title="我的服务" border>
           <wd-grid :gutter="10" :column="4" icon-size="36px" clickable>
-            <wd-grid-item text="常用观演人" use-icon-slot @itemclick="goTo('/pages-sub/viewer/index', true)">
+            <wd-grid-item text="常用信息" use-icon-slot @itemclick="goTo('/pages-sub/viewer/index', true)">
               <template #icon>
                 <image src="/static/images/viewer.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item text="帮助与客服" use-icon-slot @itemclick="goTo('/pages-sub/help/index', true)">
+            <wd-grid-item text="帮助与客服" use-icon-slot @itemclick="goTo('/pages-sub/help/index', false)">
               <template #icon>
                 <image src="/static/images/help.svg" class="slot-img" mode="aspectFill" />
               </template>
             </wd-grid-item>
-            <wd-grid-item text="用户隐私协议" use-icon-slot @itemclick="goTo(uni.openPrivacyContract(), true)">
+            <wd-grid-item text="用户隐私协议" use-icon-slot @itemclick="onPrivacyContract">
               <template #icon>
                 <image src="/static/images/privacy.svg" class="slot-img" mode="aspectFill" />
               </template>
@@ -107,15 +107,14 @@ const userInfo = computed(() => {
   return {
     avatar: userStore.userInfo.avatar || '/static/images/avatar.png',
     nickname: userStore.isLogined ? userStore.userInfo.nickname || '设置昵称' : '登录 / 注册',
-    mobile: userStore.userInfo.mobile || '开启您的快乐时光',
+    mobile: userStore.userInfo.mobile ? '手机号 ' + userStore.userInfo.mobile : '开启您的快乐时光',
   }
 })
 
 // 封装跳转
 const goTo = (url: any, needLogin = true) => {
   if (typeof url === 'function') {
-    url()
-    return
+    return url()
   }
   // 如果需要登录且用户未登录
   if (needLogin && !userStore.isLogined) {
@@ -137,15 +136,20 @@ const goTo = (url: any, needLogin = true) => {
   uni.navigateTo({ url })
 }
 
-// 我的订单
-const goOrder = () => goTo('/pages/order/index', true)
-
-// 设置
-const goSetting = () => {
-  // goTo('/pages-sub/setting/index', true)
+const onPrivacyContract = () => {
+  uni.openPrivacyContract({
+    success: (res) => {
+      if (res.errMsg === 'openPrivacyContract:ok') {
+        console.log('用户已同意隐私协议')
+      } else {
+        console.log('用户未同意隐私协议')
+      }
+    },
+    fail: (err) => {
+      console.error('打开隐私协议失败:', err)
+    },
+  })
 }
-
-onLoad(() => {})
 </script>
 
 <style lang="scss">
