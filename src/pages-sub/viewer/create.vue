@@ -145,7 +145,7 @@ onLoad(({ viewer }) => {
               v-model="formData.realname"
               :readonly="isEditable"
               label="真实姓名"
-              label-width="5.6em"
+              label-width="6.6em"
               size="large"
               prop="realname"
               clearable
@@ -155,7 +155,7 @@ onLoad(({ viewer }) => {
               v-model="formData.idcard"
               :readonly="isEditable"
               label="身份证号码"
-              label-width="5.6em"
+              label-width="6.6em"
               size="large"
               prop="idcard"
               clearable
@@ -170,7 +170,7 @@ onLoad(({ viewer }) => {
               v-model="formData.mobile"
               :readonly="formDisabled"
               label="手机号码"
-              label-width="5.6em"
+              label-width="6.6em"
               size="large"
               prop="mobile"
               clearable
@@ -189,7 +189,7 @@ onLoad(({ viewer }) => {
           <wd-cell-group title="温馨提示">
             <view class="px-4 pb-2 text-size-sm">
               <view class="mb-2">
-                根据相关法律法规及防疫要求，购票需实名制。我们会严格保护您的姓名和身份证信息，仅用于出票、入场核验及应急调查。为确保信息真实有效，我们可能会通过权威渠道进行验证。
+                根据相关法律法规要求，购票需实名制。我们会严格保护您的姓名和身份证信息，仅用于出票、入场核验及应急调查。为确保信息真实有效，我们可能会通过权威渠道进行验证。
               </view>
             </view>
           </wd-cell-group>
