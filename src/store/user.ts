@@ -27,6 +27,11 @@ export const useUserStore = defineStore(
       userInfo.value = { ...initState }
     }
 
+    const info = async () => {
+      const res = await getUserinfo()
+      setUserInfo(res.data)
+    }
+
     // 获取用户信息
     const getUserInfo = async () => {
       try {
@@ -85,6 +90,7 @@ export const useUserStore = defineStore(
       reset,
       checkSessionid,
       getUserInfo,
+      info,
     }
   },
   {

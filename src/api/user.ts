@@ -32,3 +32,24 @@ export const getUserinfo = () => {
 export const bindPhone = (code: string) => {
   return http.post('/app/index.php?c=wxapp&a=me&do=bind_mobile', { code })
 }
+
+// 修改资料
+export const updateUserinfo = (data: any) => {
+  return http.post('/app/index.php?c=wxapp&a=me&do=update', data)
+}
+
+// 上传头像
+export const uploadAvatar = (file: File) => {
+  const formData = new FormData()
+  formData.append('avatar', file)
+  return http.post('/app/index.php?c=wxapp&a=me&do=avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
+// 上传头像 base64
+export const uploadAvatarBase64 = (image: string) => {
+  return http.post('/app/index.php?c=wxapp&a=me&do=avatar_base64', { image })
+}
