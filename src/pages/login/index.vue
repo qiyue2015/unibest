@@ -25,9 +25,18 @@ const onLogin = async () => {
         title: '用户隐私协议须知',
         msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
       })
-      .then(() => {
+      .then(async () => {
         agree.value = true
-        fetchUserInfo()
+        uni.showLoading({ title: '登录中' })
+        await fetchUserInfo()
+        uni.hideLoading()
+        toast.success({
+          msg: '登录成功',
+          duration: 1000,
+          closed: () => {
+            uni.switchTab({ url: '/pages/index/index' })
+          },
+        })
       })
     return
   }
