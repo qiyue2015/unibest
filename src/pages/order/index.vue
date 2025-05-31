@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import { LoadMoreState } from 'wot-design-uni/components/wd-loadmore/types'
 import { getOrderList } from '@/api/order'
 import OrderCard from '@/components/OrderCard.vue'
 
@@ -38,10 +37,13 @@ const tabs = reactive([
 
 const queryParams = reactive({ status: 1, current: 1, pageSize: 10 })
 const list = ref<any[]>([])
-const state = ref<LoadMoreState>('loading')
+const state = ref<string>('end')
 
 const fetchData = async () => {
   try {
+    if (state.value === 'loading' || state.value === 'finished') {
+      return
+    }
     state.value = 'loading'
     uni.showLoading({ title: '加载中…', mask: true })
     const { data } = await getOrderList(queryParams)
@@ -50,7 +52,7 @@ const fetchData = async () => {
     if (data.length === 0 || data.length < queryParams.pageSize) {
       state.value = 'finished'
     } else {
-      state.value = 'loading'
+      state.value = 'end'
     }
     uni.hideLoading()
   } catch {
