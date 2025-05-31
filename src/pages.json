@@ -132,8 +132,10 @@
         {
           "path": "setting/index",
           "type": "page",
+          "needLogin": true,
           "style": {
-            "navigationBarTitleText": "设置"
+            "navigationBarTitleText": "个人信息",
+            "backgroundColor": "#f5f5f5"
           }
         },
         {
