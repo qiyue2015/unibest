@@ -14,7 +14,8 @@
       <scroll-view scroll-y refresher-enabled :refresher-triggered="isRefreshing" @refresherrefresh="onRefresh">
         <view class="flex flex-col m-4 gap-3">
           <wd-button type="info" size="large" icon="add-circle" block @click="goToCreateViewer">添加观演人</wd-button>
-          <view class="rounded-xl overflow-hidden flex-1">
+          <wd-status-tip v-if="isEmpty" image="content" tip="暂无观演人信息，请先添加观演人" />
+          <view v-if="!isEmpty" class="rounded-xl overflow-hidden flex-1">
             <wd-cell-group border>
               <wd-checkbox-group v-model="selectedViewers">
                 <block v-for="viewer in viewers" :key="viewer.id">
@@ -23,7 +24,7 @@
                       <wd-checkbox :model-value="viewer.id" :disabled="!viewer.mobile" size="large" shape="square">
                         <view class="text-base">{{ viewer.realname }}</view>
                         <view v-if="viewer?.mobile" class="text-sm text-gray-500">{{ viewer.idcard }}</view>
-                        <view v-else class="text-sm text-red">联系方待填写</view>
+                        <view v-else class="text-sm text-red">联系方式待完善</view>
                       </wd-checkbox>
                     </template>
                     <wd-button type="icon" icon="edit-outline" @click="goToEditViewer(viewer)" />
@@ -38,7 +39,7 @@
     <view class="bg-white p-4 bottom-area">
       <wd-button :disabled="isButtonDisabled" size="large" block @click="onConfirm">
         <view class="center gap-2">
-          <view>确认</view>
+          <view>确认选择</view>
           <view class="text-size-xs">已选 {{ selectedCount }} / {{ MAX_VIEWERS }} 人</view>
         </view>
       </wd-button>
@@ -96,13 +97,16 @@ const onConfirm = () => {
 }
 
 const isRefreshing = ref(false)
+const isEmpty = computed(() => {
+  return viewers.value.length === 0 && !isRefreshing.value
+})
 const viewers = ref<any[]>([])
 const fetchViewers = async () => {
   try {
     isRefreshing.value = true
     uni.showLoading({ title: '加载中...', mask: true })
     const { data } = await getViewerList()
-    viewers.value = data || []
+    viewers.value = data
   } finally {
     isRefreshing.value = false
     uni.hideLoading()

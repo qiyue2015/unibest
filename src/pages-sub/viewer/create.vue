@@ -28,19 +28,19 @@ const formData = reactive({ realname: '', idcard: '', mobile: undefined })
 
 // 新增时的校验规则
 const formRules: FormRules = {
-  realname: [{ required: true, message: '请输入真实姓名' }],
+  realname: [{ required: true, message: '请填写真实姓名' }],
   idcard: [
-    { required: true, message: '请输入身份证号' },
+    { required: true, message: '请填写身份证号码' },
     {
       required: false,
-      message: '身份证号格式不正确',
+      message: '身份证号码格式不正确',
       validator: (val) => {
         return /^[1-9]\d{5}(18|19|20)?\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}(\d|X)$/.test(val)
       },
     },
   ],
   mobile: [
-    { required: true, message: '请输入手机号码' },
+    { required: true, message: '请填写手机号码' },
     { required: false, message: '手机号码格式不正确', validator: (val) => /^1[3-9]\d{9}$/.test(val) },
   ],
 }
@@ -48,7 +48,7 @@ const formRules: FormRules = {
 // 只校验手机号
 const mobileRules: FormRules = {
   mobile: [
-    { required: !isMobileEditable, message: '请输入手机号码' },
+    { required: !isMobileEditable, message: '请填写手机号码' },
     { required: false, message: '手机号码格式不正确', validator: (val) => /^1[3-9]\d{9}$/.test(val) },
   ],
 }
@@ -57,7 +57,7 @@ const handleSubmit = () => {
   formRef.value.validate().then(async ({ valid }) => {
     if (valid) {
       try {
-        toast.loading({ msg: '保存中...', duration: 0 })
+        toast.loading({ msg: '保存中，请稍候...', duration: 0 })
         if (viewerId.value) {
           await updateViewer(viewerId.value, formData)
         } else {
@@ -68,11 +68,12 @@ const handleSubmit = () => {
           duration: 1000,
           closed() {
             uni.navigateBack({ delta: 1 })
-            uni.$emit('updateViewer', formData) // 通知其他页面更新观演人信息
+            uni.$emit('updateViewer', formData)
           },
         })
       } catch {
         toast.close()
+        toast.show('保存失败，请稍后重试')
       }
     }
   })
@@ -82,12 +83,14 @@ const handleSubmit = () => {
 const onDeleteViewer = async (id: string) => {
   message
     .confirm({
-      title: '删除确认',
+      title: '删除观演人',
       msg: '确定要删除该观演人信息吗？删除后将无法恢复。',
+      confirmButtonText: '删除',
+      cancelButtonText: '取消',
     })
     .then(async () => {
       try {
-        toast.loading({ msg: '删除中...', duration: 0 })
+        toast.loading({ msg: '删除中，请稍候...', duration: 0 })
         await deleteViewer(id)
         toast.success({
           msg: '删除成功',
@@ -98,11 +101,12 @@ const onDeleteViewer = async (id: string) => {
         })
       } catch {
         toast.close()
+        toast.show('删除失败，请稍后重试')
         uni.navigateBack({ delta: 1 })
       }
     })
     .catch(() => {
-      console.log('点击了取消按钮')
+      // 用户点击了取消，无需提示
     })
 }
 
@@ -145,17 +149,17 @@ onLoad(({ viewer }) => {
               size="large"
               prop="realname"
               clearable
-              placeholder="请填写观演人真实姓名"
+              placeholder="请填写真实姓名"
             />
             <wd-input
               v-model="formData.idcard"
               :readonly="isEditable"
-              label="身份证号"
+              label="身份证号码"
               label-width="5.6em"
               size="large"
               prop="idcard"
               clearable
-              placeholder="请填写观演人身份证号码"
+              placeholder="请填写身份证号码"
             />
           </wd-cell-group>
         </view>
@@ -171,11 +175,11 @@ onLoad(({ viewer }) => {
               prop="mobile"
               clearable
               type="tel"
-              placeholder="请填写观演人手机号码"
+              placeholder="请填写手机号码"
             />
             <wd-cell custom-class="custom-cell-class" size="large" center>
               <template #label>
-                <text class="text-size-xs text-red">请填写观演人手机号码，用于电子门票查询与核验。</text>
+                <text class="text-size-xs text-red">请填写观演人手机号码，用于电子票查询与入场核验。</text>
               </template>
             </wd-cell>
           </wd-cell-group>
@@ -185,7 +189,7 @@ onLoad(({ viewer }) => {
           <wd-cell-group title="温馨提示">
             <view class="px-4 pb-2 text-size-sm">
               <view class="mb-2">
-                根据相关法律及防疫要求，购票需实名制。我们会严格保护您的姓名和身份证信息，仅用于出票、入场核验及应急调查。为确保信息真实有效，我们可能会通过权威渠道进行验证。
+                根据相关法律法规及防疫要求，购票需实名制。我们会严格保护您的姓名和身份证信息，仅用于出票、入场核验及应急调查。为确保信息真实有效，我们可能会通过权威渠道进行验证。
               </view>
             </view>
           </wd-cell-group>
