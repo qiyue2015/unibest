@@ -32,7 +32,7 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group title="订单中心" border>
           <template #value>
-            <navigator class="font-normal text-gray" hover-class="none" url="/pages/order/index" open-type="navigate">
+            <navigator class="font-normal text-gray" hover-class="none" url="/pages/order/index?status=0" open-type="navigate">
               查看全部
               <wd-icon name="arrow-right"></wd-icon>
             </navigator>
