@@ -35,7 +35,7 @@ const tabs = reactive([
   { title: '已关闭', value: 4 },
 ])
 
-const queryParams = reactive({ status: 1, current: 1, pageSize: 10 })
+const queryParams = reactive({ status: 1, current: 1, pageSize: 30 })
 const list = ref<any[]>([])
 const state = ref<string>('start')
 
@@ -84,8 +84,6 @@ onLoad((options) => {
 onShow(() => {
   state.value = 'start'
   queryParams.current = 1
-  console.log('onShow')
-  list.value = []
   fetchData()
 })
 </script>
