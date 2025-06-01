@@ -13,7 +13,7 @@
     <view class="flex flex-col items-center justify-center gap-2 py-4 min-h-20">
       <!-- 0待支付 -->
       <template v-if="detail.status === 0">
-        <view class="text-size-xl">待支付</view>
+        <view class="text-size-xl">等待付款</view>
         <view class="text-gray text-size-sm">{{ countdownText }}</view>
         <view class="grid grid-cols-2 gap-2 mt-3">
           <wd-button type="primary" @click="onPayOrder">立即支付</wd-button>
@@ -22,29 +22,32 @@
       </template>
       <!-- 1付款成功 -->
       <template v-if="detail.status === 1">
-        <view class="text-size-xl">付款成功</view>
-        <view class="text-gray text-size-sm">订单已支付成功</view>
+        <view class="text-size-xl">购票成功</view>
+        <view class="text-gray text-size-sm">您已成功购买门票，请按时前往观赛</view>
       </template>
-      <!-- 2已使用 -->
+      <!-- 2已完成 -->
       <template v-if="detail.status === 2">
         <view class="text-size-xl">已使用</view>
         <view class="text-gray text-size-sm">订单已使用，感谢您的支持！</view>
       </template>
-      <!-- 3已退款 4退款失败 5未支付关闭 -->
-      <template v-if="detail.status >= 3">
+      <!-- 3已关闭 -->
+      <template v-if="detail.status === 3">
         <view class="text-size-xl">已关闭</view>
-        <template v-if="detail.status === 6">
+        <template v-if="detail.cancel_reason === 'timeout_cancel'">
           <view class="text-gray text-size-sm">订单未及时付款，交易已关闭</view>
         </template>
-        <template v-if="detail.status === 5">
+        <template v-else>
           <view class="text-gray text-size-sm">订单已手动取消，交易已关闭</view>
         </template>
-        <template v-if="detail.status === 4">
-          <view class="text-gray text-size-sm">您的退款已受理，预计1-3个工作日到账</view>
-        </template>
-        <template v-if="detail.status === 3">
-          <view class="text-gray text-size-sm">退款成功，款项将原路退回，请注意查收。</view>
-        </template>
+      </template>
+      <!-- 4申请退款中 5已退款 6退款失败 -->
+      <template v-if="detail.status === 4 || detail.status === 6">
+        <view class="text-size-xl">退款处理中</view>
+        <view class="text-gray text-size-sm">退款申请已提交，预计1-3个工作日完成</view>
+      </template>
+      <template v-if="detail.status === 5">
+        <view class="text-size-xl">退款成功</view>
+        <view class="text-gray text-size-sm">款项将原路退回，请注意查收。</view>
       </template>
     </view>
 
@@ -57,10 +60,11 @@
         <view class="bg-gray-100 mx-4 mt-4 rounded-1 px-3 py-2">
           <view class="flex justify-between mb-2">
             <text>{{ detail.date }}</text>
-            <text>x1张</text>
+            <text>x{{ detail.ticket_count }}张</text>
           </view>
           <view v-for="(venue, idx) in detail.venues" :key="idx" class="text-size-sm text-gray-500 my-2 text-justify w-full">
-            {{ venue.team }} {{ venue.time }}
+            <view>{{ venue.team }} {{ venue.time }}</view>
+            <view>{{ venue.venue }}</view>
           </view>
         </view>
         <wd-cell title="票品总价" :value="'¥' + detail.total_amount" :border="false" />
@@ -72,7 +76,7 @@
 
     <!-- 购买票品 -->
     <view v-if="detail.status === 1 || detail.status === 2" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
-      <wd-cell-group title="观演人门票" border>
+      <wd-cell-group title="持票人信息" border>
         <template v-for="ticket in tickets" :key="ticket.id">
           <wd-cell :title="ticket.realname" :label="ticket.idcard" center is-link @click="goTicket(ticket)">
             <ticket-status :status="ticket.status" />
@@ -115,7 +119,9 @@ const detail = reactive({
   contact_name: '',
   mobile: '',
   status: undefined,
+  cancel_reason: '',
   total_amount: '0.00',
+  ticket_count: 0,
   date: '',
   venues: [],
   pay_at: '',
@@ -123,7 +129,7 @@ const detail = reactive({
   created_at: '',
 })
 
-const ticketloading = ref(false)
+const ticketLoading = ref(false)
 const tickets = ref<any[]>([])
 
 let countdownTimer: number | null = null
@@ -199,12 +205,12 @@ const fetchData = async () => {
 
 const fetchTickets = async () => {
   if (!detail.id || detail?.status === 0) return
-  ticketloading.value = true
+  ticketLoading.value = true
   try {
     const { data } = await getOrderTickets(detail.id)
     tickets.value = data || []
   } finally {
-    ticketloading.value = false
+    ticketLoading.value = false
   }
 }
 
@@ -216,7 +222,7 @@ const onCloseOrder = async () => {
     await fetchData()
     toast.success({ msg: '订单已关闭', duration: 1000 })
   } catch (error) {
-    // toast.error({ msg: '关闭订单失败，请稍后再试' })
+    toast.error({ msg: error.message })
   }
 }
 

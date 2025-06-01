@@ -7,7 +7,7 @@
           <OrderStatus :status="order.status" />
         </template>
         <block v-for="(venue, index) in order.venues" :key="index">
-          <wd-cell :title="venue.team" :value="venue.time" size="large" center />
+          <wd-cell :title="venue.team" :label="venue.venue" :value="venue.time" size="large" center />
         </block>
         <wd-cell size="large" center is-link>
           <text class="text-size-sm text-gray mr-1">实付款</text>

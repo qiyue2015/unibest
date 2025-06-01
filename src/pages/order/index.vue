@@ -37,7 +37,7 @@ const tabs = reactive([
 
 const queryParams = reactive({ status: 1, current: 1, pageSize: 10 })
 const list = ref<any[]>([])
-const state = ref<string>('end')
+const state = ref<string>('start')
 
 const fetchData = async () => {
   try {
@@ -52,7 +52,7 @@ const fetchData = async () => {
     if (data.length === 0 || data.length < queryParams.pageSize) {
       state.value = 'finished'
     } else {
-      state.value = 'end'
+      state.value = 'start'
     }
     uni.hideLoading()
   } catch {
@@ -62,10 +62,11 @@ const fetchData = async () => {
 }
 
 const onChange = ({ index }) => {
+  queryParams.status = index
+  queryParams.current = 1
+  state.value = 'start'
   list.value = []
-  uni.redirectTo({
-    url: `/pages/order/index?status=${tabs[index].value}`,
-  })
+  fetchData()
 }
 
 // 计算是否为空
@@ -81,7 +82,9 @@ onLoad((options) => {
 })
 
 onShow(() => {
+  state.value = 'start'
   queryParams.current = 1
+  console.log('onShow')
   list.value = []
   fetchData()
 })

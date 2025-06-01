@@ -10,13 +10,13 @@ const props = defineProps<{
 }>()
 
 const statusMap: Record<number, string> = {
-  0: '待支付',
-  1: '待使用',
+  0: '等待付款',
+  1: '待核销',
   2: '已完成',
   3: '已关闭',
-  4: '申请退款中',
-  5: '已退款',
-  6: '申请退款中', // 退款失败
+  4: '退款处理中',
+  5: '退款成功',
+  6: '退款处理中', // 退款失败
 }
 
 const statusText = computed(() => {
