@@ -124,7 +124,9 @@ const goTo = (url: any, needLogin = true) => {
         title: '请先登录',
       })
       .then(() => {
-        uni.navigateTo({ url: '/pages/login/index' })
+        uni.navigateTo({
+          url: '/pages/login/index?redirectUrl=' + encodeURIComponent('/pages/ucenter/index'),
+        })
       })
       .catch(() => {
         // 取消登录

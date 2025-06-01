@@ -34,7 +34,7 @@ const onLogin = async () => {
           msg: '登录成功',
           duration: 1000,
           closed: () => {
-            uni.switchTab({ url: '/pages/index/index' })
+            uni.navigateBack({ delta: 1 })
           },
         })
       })
@@ -46,7 +46,7 @@ const onLogin = async () => {
       msg: '登录成功',
       duration: 1000,
       closed: () => {
-        uni.switchTab({ url: '/pages/index/index' })
+        uni.navigateBack({ delta: 1 })
       },
     })
   } catch (error) {
@@ -109,7 +109,7 @@ const onRealtimePhone = async ({ detail }) => {
       toast.loading({ msg: '登录中', duration: 0 })
       await bindPhone(detail.code)
       await userStore.getUserInfo()
-      uni.switchTab({ url: '/pages/index/index' })
+      uni.navigateBack({ delta: 1 })
     } finally {
       toast.close()
     }
