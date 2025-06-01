@@ -9,15 +9,14 @@ const props = defineProps<{
   status: string | number
 }>()
 
-// 订单状态: 0待支付 1待使用 2已关闭 3已完成 4退款失败 5主动关闭 6超时关闭
 const statusMap: Record<number, string> = {
   0: '待支付',
   1: '待使用',
-  2: '已关闭',
-  3: '已完成',
-  4: '已关闭',
-  5: '已关闭',
-  6: '已关闭',
+  2: '已完成',
+  3: '已关闭',
+  4: '申请退款中',
+  5: '已退款',
+  6: '申请退款中', // 退款失败
 }
 
 const statusText = computed(() => {
@@ -28,17 +27,19 @@ const statusText = computed(() => {
 const statusClass = computed(() => {
   const key = Number(props.status)
   switch (key) {
-    case 0:
+    case 0: // 待支付
       return 'text-orange-500'
-    case 1:
+    case 1: // 待使用
       return 'text-blue-500'
-    case 2:
-    case 5:
-    case 6:
-      return 'text-gray-400'
-    case 3:
+    case 2: // 已完成
       return 'text-green-500'
-    case 4:
+    case 3: // 已取消
+      return 'text-gray-400'
+    case 4: // 申请退款中
+      return 'text-red-500'
+    case 5: // 已退款
+      return 'text-gray-400'
+    case 6: // 退款失败
       return 'text-red-500'
     default:
       return ''
