@@ -20,9 +20,13 @@
                 </block>
                 <wd-cell size="large" center :is-link="row.sale_status === 1" @click="onOrder(row)">
                   <template #title>
-                    <text class="text-amber">¥ {{ row.price }}</text>
+                    <text :class="{ 'text-amber font-bold': row.sale_status === 1, 'text-gray': row.sale_status !== 1 }">
+                      ¥ {{ row.price }}
+                    </text>
                   </template>
-                  <text v-if="row.sale_status !== 1">售罄</text>
+                  <text v-if="row.sale_status === 0" class="text-gray">{{ row.start_sale_time }} 开售</text>
+                  <text v-if="row.sale_status === 1" class="text-amber font-bold">立即购买</text>
+                  <text v-if="row.sale_status === 2" class="text-gray">已停售</text>
                 </wd-cell>
               </wd-cell-group>
             </view>
@@ -62,8 +66,9 @@ const fetchData = async () => {
 }
 
 const onOrder = (row: any) => {
-  if (row.sale_status !== 1) return
-  uni.navigateTo({ url: `/pages/index/confirm?schedule_id=${row.id}` })
+  if (row.sale_status === 1) {
+    uni.navigateTo({ url: `/pages/index/confirm?schedule_id=${row.id}` })
+  }
 }
 
 onShow(() => {

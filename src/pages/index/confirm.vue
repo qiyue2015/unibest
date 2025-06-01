@@ -79,6 +79,16 @@ const fetchData = async () => {
   try {
     uni.showLoading({ title: '加载中...' })
     const { data } = await getScheduleDetail(scheduleId.value)
+    if (data.sale_status !== 1) {
+      toast.error({
+        msg: '该赛程已停售或未开售',
+        duration: 1000,
+        closed() {
+          uni.switchTab({ url: '/pages/index/index' })
+        },
+      })
+      return
+    }
     schedule.value = data
   } finally {
     uni.hideLoading()
@@ -104,7 +114,6 @@ const selectViewers = () => {
 
 // 支付订单
 const onPayOrder = async (order: any) => {
-  console.log('支付订单:', order)
   try {
     const { data } = await payOrder(order.tid)
     wx.requestPayment({

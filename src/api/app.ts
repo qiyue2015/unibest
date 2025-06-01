@@ -17,7 +17,7 @@ export const getScheduleList = () => {
 
 // 赛事赛程详情
 export const getScheduleDetail = (id: number) => {
-  return http.get('/app/index.php?a=wxapp&c=entry&m=basketball&do=schedule&op=detail', {
+  return http.get<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=schedule&op=detail', {
     id,
   })
 }
