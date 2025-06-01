@@ -9,9 +9,9 @@
 
 <template>
   <view class="h-screen overflow-hidden">
-    <wd-tabs v-model="query.status" custom-class="m-tabs" auto-line-width swipeable @change="onChange">
+    <wd-tabs v-model="current" custom-class="m-tabs" auto-line-width swipeable @change="onChange">
       <block v-for="tab in tabs" :key="tab">
-        <wd-tab :title="tab">
+        <wd-tab :title="tab.title" :value="tab.value">
           <wd-status-tip v-if="isEmpty" image="content" tip="暂无相关门票" />
           <block v-for="row in list" :key="row.id">
             <view class="mx-4 m-3 rounded-xl overflow-hidden" @click="goDetail(row)">
@@ -44,7 +44,12 @@
 import { getMyTicket } from '@/api/order'
 import TicketStatus from '@/components/TicketStatus.vue'
 
-const tabs = ['可使用', '已使用', '已过期']
+const current = ref(0)
+const tabs = reactive([
+  { title: '可使用', value: 0 },
+  { title: '已使用', value: 1 },
+  { title: '已过期', value: 3 },
+])
 
 const isEmpty = ref(false)
 const query = reactive({ status: 0 })
@@ -53,6 +58,7 @@ const list = ref<any[]>([])
 const fetchData = async () => {
   try {
     uni.showLoading({ title: '加载中...' })
+    console.log('查询条件:', query)
     const { data } = await getMyTicket(query)
     isEmpty.value = data.length === 0
     list.value = data
@@ -65,7 +71,7 @@ const fetchData = async () => {
 }
 
 const onChange = ({ index }) => {
-  query.status = index
+  query.status = tabs[index].value
   list.value = []
   fetchData()
 }

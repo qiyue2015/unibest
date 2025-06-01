@@ -19,12 +19,13 @@
       <view class="py-4">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
           <view class="w-38 h-38 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
-            <wd-img v-if="ticket.status === 1 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
+            <wd-img v-if="ticket.status === 0 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
             <text v-else class="text-gray-300">二维码不可用</text>
           </view>
         </view>
-        <view v-if="ticket.status === 1" class="text-size-sm mt-2 text-green-600">二维码实时更新 请勿截屏使用</view>
-        <view v-if="ticket.status === 2" class="text-size-sm mt-2 text-gray-400">门票已使用</view>
+        <view v-if="ticket.status === 0" class="text-size-sm mt-2 text-green-600">二维码实时更新 请勿截屏使用</view>
+        <view v-if="ticket.status === 1" class="text-size-sm mt-2 text-gray-400">门票已使用</view>
+        <view v-if="ticket.status === 2" class="text-size-sm mt-2 text-orange-500">门票已取消</view>
         <view v-if="ticket.status === 3" class="text-size-sm mt-2 text-red-500">门票已过期</view>
       </view>
 
@@ -97,12 +98,10 @@ let refreshTimer: ReturnType<typeof setInterval> | null = null
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
   onMessage: (msg) => {
     if (msg.type === 'ticket_notify') {
+      ticket.value.status = msg.payload.status
       // 如果票已核销，关闭 WebSocket 连接
-      if (msg.payload.status === 2) {
+      if (msg.payload.status === 1) {
         socketClose()
-        if (ticket.value) {
-          ticket.value.status = 2
-        }
       }
     }
     wsMsg.value = msg.payload
@@ -160,7 +159,7 @@ function startPolling() {
       const { data } = await getTicketInfo(ticketId.value)
       ticket.value = data
       wsMsg.value = '[HTTP] ' + JSON.stringify(data)
-      if (data.status === 2) {
+      if (data.status > 0) {
         stopPolling()
       }
     }
@@ -193,7 +192,7 @@ watch(
     // 先清理所有副作用
     stopPolling()
     stopRefreshQrcode()
-    if (status === 1) {
+    if (status === 0) {
       if (!wsFallbackToPolling.value) {
         wsReconnectCount.value = 0
         await socketConnect({
