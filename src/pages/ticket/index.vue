@@ -22,6 +22,7 @@
                   <view v-for="item in row.schedule.venues" :key="item.id">
                     <view>{{ item.time }}</view>
                     <view class="whitespace-nowrap">{{ item.team }}</view>
+                    <view class="whitespace-nowrap">{{ item.venue }}</view>
                   </view>
                 </view>
                 <wd-divider dashed />

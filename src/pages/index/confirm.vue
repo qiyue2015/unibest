@@ -17,7 +17,7 @@
             <view class="text-amber font-bold">¥{{ schedule.price }}/人</view>
           </template>
           <block v-for="(venue, index) in schedule.venues" :key="index">
-            <wd-cell :title="venue.team" :value="venue.time" size="large" center />
+            <wd-cell :title="venue.team" :label="venue.venue" :value="venue.time" size="large" center />
           </block>
         </wd-cell-group>
       </view>

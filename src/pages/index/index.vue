@@ -16,7 +16,7 @@
             <view class="mx-4 m-3 rounded-xl overflow-hidden">
               <wd-cell-group :title="row.date" border>
                 <block v-for="(venue, index) in row.venues" :key="index">
-                  <wd-cell :title="venue.team" :value="venue.time" size="large" center />
+                  <wd-cell :title="venue.team" :label="venue.venue" :value="venue.time" size="large" center />
                 </block>
                 <wd-cell size="large" center :is-link="row.sale_status === 1" @click="onOrder(row)">
                   <template #title>
