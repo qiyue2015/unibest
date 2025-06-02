@@ -17,99 +17,61 @@ const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
 const agree = ref(false)
 
+// 封装返回上一页方法
+const goBackOrHome = () => {
+  uni.navigateBack({
+    delta: 1,
+    fail: () => {
+      uni.reLaunch({ url: '/pages/index/index' })
+    },
+  })
+}
+
 // 用户登录
 const onLogin = async () => {
   if (!agree.value) {
-    message
-      .confirm({
-        title: '用户隐私协议须知',
-        msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
+    const messageOptions = {
+      title: '用户隐私协议须知',
+      msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
+    }
+    message.confirm(messageOptions).then(async () => {
+      agree.value = true
+      uni.showLoading({ title: '登录中' })
+      await userStore.getUserInfo()
+      uni.hideLoading()
+      toast.success({
+        msg: '登录成功',
+        duration: 1000,
+        closed: goBackOrHome,
       })
-      .then(async () => {
-        agree.value = true
-        uni.showLoading({ title: '登录中' })
-        await fetchUserInfo()
-        uni.hideLoading()
-        toast.success({
-          msg: '登录成功',
-          duration: 1000,
-          closed: () => {
-            uni.navigateBack({ delta: 1 })
-          },
-        })
-      })
+    })
     return
   }
 
   try {
-    toast.success({
-      msg: '登录成功',
+    toast.loading({
+      msg: '登录中',
       duration: 1000,
-      closed: () => {
-        uni.navigateBack({ delta: 1 })
-      },
+      closed: () =>
+        toast.success({
+          msg: '登录成功',
+          duration: 1000,
+          closed: goBackOrHome,
+        }),
     })
   } catch (error) {
     console.error('获取用户信息失败:', error)
   }
 }
 
-// 取消登录
-const onCancelLogin = () => {
-  userStore.clearUserInfo()
-  uni.switchTab({ url: '/pages/index/index' })
-}
-
-// 获取用户信息
-const fetchUserInfo = async () => {
-  try {
-    toast.loading({
-      msg: '加载中…',
-      duration: 0,
-    })
-    await userStore.getUserInfo()
-  } finally {
-    toast.close()
-  }
-}
-
-// 绑定手机号
-// const onBindPhone = async ({ code }) => {
-//   if (!agree.value) {
-//     toast.error({ msg: '请先阅读并同意相关协议', duration: 1500 })
-//     return
-//   }
-//   try {
-//     toast.loading({ msg: '登录中', duration: 0, direction: 'vertical' })
-//     await userStore.getUserInfo()
-//     if (userStore.userInfo?.mobile) {
-//       await bindPhone(code)
-//     }
-//     uni.switchTab({ url: '/pages/index/index' })
-//   } finally {
-//     toast.close()
-//   }
-// }
-
 // 实时获取手机号
 const onRealtimePhone = async ({ detail }) => {
   if (detail.errMsg === 'getPhoneNumber:ok') {
-    if (!agree.value) {
-      message
-        .confirm({
-          title: '用户隐私协议须知',
-          msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
-        })
-        .then(() => {
-          agree.value = true
-        })
-      return
-    }
     try {
       toast.loading({ msg: '登录中', duration: 0 })
       await bindPhone(detail.code)
       await userStore.getUserInfo()
-      uni.navigateBack({ delta: 1 })
+      goBackOrHome()
     } finally {
       toast.close()
     }
@@ -121,11 +83,10 @@ const onRealtimePhone = async ({ detail }) => {
   }
 }
 
-// 同意协议变更处理
-const onAgreeChange = (e: any) => {
-  if (e.value && !userInfo.value?.mobile) {
-    fetchUserInfo()
-  }
+// 取消登录
+const onCancelLogin = () => {
+  userStore.clearUserInfo()
+  uni.switchTab({ url: '/pages/index/index' })
 }
 
 const handleOpenPrivacyContract = () => {
@@ -158,8 +119,7 @@ const handleOpenPrivacyContract = () => {
       </view>
 
       <view class="mx-20">
-        <view></view>
-        <view v-if="!userInfo?.mobile && agree" class="rounded-full overflow-hidden">
+        <view v-if="!userInfo?.mobile" class="rounded-full overflow-hidden">
           <button type="primary" open-type="getPhoneNumber" @getphonenumber="onRealtimePhone">登录</button>
         </view>
         <view v-else class="rounded-full overflow-hidden">
@@ -172,7 +132,7 @@ const handleOpenPrivacyContract = () => {
     </view>
 
     <view class="flex items-center mb-2 mt-6">
-      <wd-checkbox v-model="agree" @change="onAgreeChange">已阅读并同意</wd-checkbox>
+      <wd-checkbox v-model="agree">已阅读并同意</wd-checkbox>
       <text class="text-blue-500 mx-1" style="font-size: var(--wot-checkbox-label-fs, 14px)" @click="handleOpenPrivacyContract">
         《用户隐私协议》
       </text>
