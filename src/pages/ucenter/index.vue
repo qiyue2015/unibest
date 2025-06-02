@@ -66,6 +66,11 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group title="我的服务" border>
           <wd-grid :gutter="10" :column="4" icon-size="36px" clickable>
+            <wd-grid-item v-if="isSponsor" text="门票发放" use-icon-slot @itemclick="goTo('/pages-sub/sponsor/index', true)">
+              <template #icon>
+                <image src="/static/tabbar/ticketHL.png" class="slot-img" mode="aspectFill" />
+              </template>
+            </wd-grid-item>
             <wd-grid-item text="常用信息" use-icon-slot @itemclick="goTo('/pages-sub/viewer/index', true)">
               <template #icon>
                 <image src="/static/images/viewer.svg" class="slot-img" mode="aspectFill" />
@@ -91,10 +96,13 @@
 <script lang="ts" setup>
 import { useMessage } from 'wot-design-uni'
 import { useAppStore, useUserStore } from '@/store'
+import { checkSponsor } from '@/api/user'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
 const message = useMessage()
+
+const isSponsor = ref(false)
 
 const headerStyle = computed(() => {
   return {
@@ -139,7 +147,7 @@ const goTo = (url: any, needLogin = true) => {
 }
 
 const onPrivacyContract = () => {
-  uni.openPrivacyContract({
+  wx.openPrivacyContract({
     success: (res) => {
       if (res.errMsg === 'openPrivacyContract:ok') {
         console.log('用户已同意隐私协议')
@@ -152,6 +160,13 @@ const onPrivacyContract = () => {
     },
   })
 }
+
+onShow(async () => {
+  if (userStore.isLogined) {
+    const { data } = await checkSponsor()
+    isSponsor.value = data.is_sponsor || false
+  }
+})
 </script>
 
 <style lang="scss">
