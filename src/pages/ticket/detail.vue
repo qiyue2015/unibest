@@ -83,6 +83,9 @@
 import { getTicketInfo } from '@/api/order'
 import TicketStatus from '@/components/TicketStatus.vue'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import { useToast } from 'wot-design-uni'
+
+const toast = useToast()
 
 const ticketId = ref<string>('')
 const ticket = ref<any>(null)
@@ -97,10 +100,11 @@ let refreshTimer: ReturnType<typeof setInterval> | null = null
 // WebSocket 相关
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
   onMessage: (msg) => {
-    if (msg.type === 'ticket_notify') {
+    if (msg.type === 'ticket_verify') {
       ticket.value.status = msg.payload.status
       // 如果票已核销，关闭 WebSocket 连接
       if (msg.payload.status === 1) {
+        toast.success('核销成功')
         socketClose()
       }
     }
