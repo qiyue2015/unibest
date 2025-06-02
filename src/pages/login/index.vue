@@ -130,7 +130,7 @@ const onAgreeChange = (e: any) => {
 
 const handleOpenPrivacyContract = () => {
   // #ifdef MP-WEIXIN
-  uni.openPrivacyContract({
+  wx.openPrivacyContract({
     success: () => {
       console.log('打开隐私协议成功')
     },
