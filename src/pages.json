@@ -123,6 +123,13 @@
       "root": "pages-sub",
       "pages": [
         {
+          "path": "gift/index",
+          "type": "page",
+          "style": {
+            "navigationBarTitleText": "领取门票"
+          }
+        },
+        {
           "path": "help/index",
           "type": "page",
           "style": {
@@ -136,6 +143,14 @@
           "style": {
             "navigationBarTitleText": "个人信息",
             "backgroundColor": "#f5f5f5"
+          }
+        },
+        {
+          "path": "sponsor/index",
+          "type": "page",
+          "needLogin": true,
+          "style": {
+            "navigationBarTitleText": "活动中心"
           }
         },
         {
