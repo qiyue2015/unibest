@@ -7,7 +7,13 @@ const initState = { uniacid: 0, name: '', bg_home: '' }
 export const useAppStore = defineStore(
   'app',
   () => {
+    const scene = ref<number>(0) // 小程序场景值
     const accountInfo = ref<any>({ ...initState })
+
+    // 设置场景值
+    const setScene = (val: number) => {
+      scene.value = val
+    }
 
     const setAccountInfo = (val: IUserInfo) => {
       accountInfo.value = val
@@ -31,14 +37,14 @@ export const useAppStore = defineStore(
       accountInfo.value = { ...initState }
     }
 
-    console.log('useAppStore init')
+    // console.log('useAppStore init')
     // #ifdef MP-WEIXIN
-    console.log('uni.getSystemSetting', uni.getSystemSetting())
-    console.log('uni.getAppAuthorizeSetting', uni.getAppAuthorizeSetting())
+    // console.log('uni.getSystemSetting', uni.getSystemSetting())
+    // console.log('uni.getAppAuthorizeSetting', uni.getAppAuthorizeSetting())
     // #endif
-    console.log('uni.getDeviceInfo', uni.getDeviceInfo())
-    console.log('uni.getWindowInfo', uni.getWindowInfo())
-    console.log('uni.getAppBaseInfo', uni.getAppBaseInfo())
+    // console.log('uni.getDeviceInfo', uni.getDeviceInfo())
+    // console.log('uni.getWindowInfo', uni.getWindowInfo())
+    // console.log('uni.getAppBaseInfo', uni.getAppBaseInfo())
 
     // 计算顶部安全区域和胶囊高度（状态栏 + 自定义导航栏高度）
     const statusBarHeight = ref<number>(0)
@@ -59,6 +65,8 @@ export const useAppStore = defineStore(
     calcTopBarHeight()
 
     return {
+      scene,
+      setScene,
       accountInfo,
       setAccountInfo,
       getAccountInfo,

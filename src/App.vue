@@ -7,11 +7,17 @@ import { checkUpdate } from '@/utils/checkUpdate'
 const appStore = useAppStore()
 const userStore = useUserStore()
 
-onLaunch(() => {
-  console.log('App Launch')
+onLaunch((options) => {
+  console.log('App Launch', options)
 })
 
-onShow(async () => {
+onShow(async (options) => {
+  // #ifdef MP-WEIXIN
+  if (options.scene) {
+    appStore.setScene(options.scene)
+  }
+  // #endif
+
   // #ifdef MP-WEIXIN
   if (userStore.isLogined) {
     // 检查 sessionid
