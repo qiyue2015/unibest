@@ -23,7 +23,8 @@
       <!-- 1付款成功 -->
       <template v-if="detail.status === 1">
         <view class="text-size-xl">购票成功</view>
-        <view class="text-gray text-size-sm">您已成功购买门票，请按时前往观赛</view>
+        <view v-if="detail.paid_amount === '0.00'" class="text-gray text-size-sm">您已成功获得门票，请按时前往观赛</view>
+        <view v-else class="text-gray text-size-sm">您已成功购买门票，请按时前往观赛</view>
       </template>
       <!-- 2已完成 -->
       <template v-if="detail.status === 2">
@@ -55,7 +56,13 @@
     <view class="mx-4 mb-4 rounded-xl overflow-hidden min-h-36">
       <wd-cell-group title="门票信息" border>
         <template #value>
-          <text v-if="detail.status === 1" class="text-rose text-size-xs cursor-pointer" @click="onRefundOrder">申请退款</text>
+          <text
+            v-if="detail.status === 1 && detail.paid_amount !== '0.00'"
+            class="text-rose text-size-xs cursor-pointer"
+            @click="onRefundOrder"
+          >
+            申请退款
+          </text>
         </template>
         <view class="bg-gray-100 mx-4 mt-4 rounded-1 px-3 py-2">
           <view class="flex justify-between mb-2">
@@ -69,7 +76,7 @@
         </view>
         <wd-cell title="票品总价" :value="'¥' + detail.total_amount" :border="false" />
         <wd-cell title="合计支付">
-          <text class="text-rose">¥{{ detail.total_amount }}</text>
+          <text class="text-rose">¥{{ detail.paid_amount }}</text>
         </wd-cell>
       </wd-cell-group>
     </view>
@@ -78,7 +85,13 @@
     <view v-if="detail.status === 1 || detail.status === 2" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
       <wd-cell-group title="持票人信息" border>
         <template v-for="ticket in tickets" :key="ticket.id">
-          <wd-cell :title="ticket.realname" :label="ticket.idcard" center is-link @click="goTicket(ticket)">
+          <wd-cell :label="ticket.idcard" center is-link @click="goTicket(ticket)">
+            <template #title>
+              <view class="flex items-center">
+                <text class="mr-2">{{ ticket.realname }}</text>
+                <wd-tag v-if="ticket.type === 'gift'" type="primary" mark>赠票</wd-tag>
+              </view>
+            </template>
             <ticket-status :status="ticket.status" />
           </wd-cell>
         </template>
@@ -121,6 +134,7 @@ const detail = reactive({
   status: undefined,
   cancel_reason: '',
   total_amount: '0.00',
+  paid_amount: '0.00',
   ticket_count: 0,
   date: '',
   venues: [],
