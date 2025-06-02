@@ -32,7 +32,10 @@
       <!-- 门票信息 -->
       <view class="bg-gray-50 rounded-lg mt-4">
         <view class="flex items-center justify-between mb-2 mx-4 pt-4">
-          <text>{{ ticket.schedule.date }}</text>
+          <view class="center">
+            <text class="mr-2">{{ ticket.schedule.date }}</text>
+            <wd-tag v-if="ticket.type === 'gift'" type="primary" mark>赠票</wd-tag>
+          </view>
           <ticket-status :status="ticket.status" />
         </view>
         <view class="text-gray text-size-sm grid grid-cols-2 gap-8 text-left px-4">
