@@ -13,8 +13,10 @@ interface NavigateToOptions {
        "/pages/ticket/detail" |
        "/pages/ticket/index" |
        "/pages/ucenter/index" |
+       "/pages-sub/gift/index" |
        "/pages-sub/help/index" |
        "/pages-sub/setting/index" |
+       "/pages-sub/sponsor/index" |
        "/pages-sub/viewer/choose" |
        "/pages-sub/viewer/create" |
        "/pages-sub/viewer/index";
