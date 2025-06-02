@@ -53,3 +53,18 @@ export const uploadAvatar = (file: File) => {
 export const uploadAvatarBase64 = (image: string) => {
   return http.post('/app/index.php?c=wxapp&a=me&do=avatar_base64', { image })
 }
+
+// 领取门票
+export const receiveTicket = (data: any) => {
+  return http({
+    url: '/app/index.php?c=entry&a=wxapp&m=basketball&do=gift&op=receive',
+    method: 'POST',
+    data: data,
+    hideErrorToast: true,
+  })
+}
+
+// 检查是否为赞助商
+export const checkSponsor = () => {
+  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=sponsor&op=check')
+}
