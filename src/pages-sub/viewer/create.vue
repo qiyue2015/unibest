@@ -156,6 +156,7 @@ onLoad(({ viewer }) => {
               :readonly="isEditable"
               label="身份证号码"
               label-width="6.6em"
+              type="idcard"
               size="large"
               prop="idcard"
               clearable
@@ -171,10 +172,10 @@ onLoad(({ viewer }) => {
               :readonly="formDisabled"
               label="手机号码"
               label-width="6.6em"
+              type="tel"
               size="large"
               prop="mobile"
               clearable
-              type="tel"
               placeholder="请填写手机号码"
             />
             <wd-cell custom-class="custom-cell-class" size="large" center>
