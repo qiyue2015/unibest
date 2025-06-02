@@ -18,7 +18,6 @@ export const useUserStore = defineStore(
     }
 
     const setUserInfo = (val: IUserInfo) => {
-      console.log('设置用户信息', val)
       userInfo.value = val
     }
 
