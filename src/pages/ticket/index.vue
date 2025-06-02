@@ -17,8 +17,15 @@
             <block v-for="row in list" :key="row.id">
               <view class="mx-4 m-3 rounded-xl overflow-hidden" @click="goDetail(row)">
                 <wd-cell-group use-slot>
-                  <template #title>{{ row.schedule.date }}</template>
-                  <template #value><ticket-status :status="row.status" /></template>
+                  <template #title>
+                    <view class="center">
+                      <text class="mr-2">{{ row.schedule.date }}</text>
+                      <wd-tag v-if="row.type === 'gift'" type="primary" mark>赠票</wd-tag>
+                    </view>
+                  </template>
+                  <template #value>
+                    <ticket-status :status="row.status" />
+                  </template>
                   <view class="text-gray text-size-sm px-4 grid grid-cols-2 gap-8">
                     <view v-for="item in row.schedule.venues" :key="item.id">
                       <view>{{ item.time }}</view>
