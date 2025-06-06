@@ -101,6 +101,14 @@ const handleOpenPrivacyContract = () => {
   })
   // #endif
 }
+
+onShow(async () => {
+  try {
+    userStore.getUserInfo()
+  } catch (error) {
+    console.error('获取用户信息失败:', error)
+  }
+})
 </script>
 
 <template>
