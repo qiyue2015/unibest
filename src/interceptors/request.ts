@@ -8,6 +8,7 @@ export type CustomRequestOptions = UniApp.RequestOptions & {
   query?: Record<string, any>
   /** 出错时是否隐藏错误提示 */
   hideErrorToast?: boolean
+  noAuth?: boolean // 是否不需要登录
 } & IUniUploadFileOptions // 添加uni.uploadFile参数类型
 
 // 请求基准地址
@@ -69,7 +70,7 @@ const httpInterceptor = {
     }
     // 3. 添加 sessionid
     const userStore = useUserStore()
-    if (userStore?.sessionid) {
+    if (userStore?.sessionid && !options.noAuth) {
       options.url += '&state=we7sid-' + userStore?.sessionid
     }
     // post 请求为表单形式，支持数组
