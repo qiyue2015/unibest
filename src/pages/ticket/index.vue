@@ -116,7 +116,10 @@ const goLogin = () => {
 }
 
 onShow(async () => {
-  isLogin.value && (await fetchData())
+  if (isLogin.value) {
+    list.value = []
+    await fetchData()
+  }
 })
 </script>
 
