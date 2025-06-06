@@ -65,7 +65,7 @@ import TicketStatus from '@/components/TicketStatus.vue'
 const userStore = useUserStore()
 
 // 计算是否登录
-const isLogin = computed(() => userStore.isLogined)
+const isLogin = computed(() => userStore.sessionid)
 
 const current = ref(0)
 const tabs = reactive([

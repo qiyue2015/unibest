@@ -102,7 +102,7 @@ const handleOpenPrivacyContract = () => {
   // #endif
 }
 
-onShow(async () => {
+onLoad(async () => {
   try {
     userStore.getUserInfo()
   } catch (error) {
