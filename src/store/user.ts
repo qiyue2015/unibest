@@ -70,7 +70,6 @@ export const useUserStore = defineStore(
         await authSessionCheck()
       } catch {
         clearUserInfo()
-        getUserInfo()
       }
     }
 
