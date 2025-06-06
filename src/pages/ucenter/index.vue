@@ -20,7 +20,7 @@
       <view class="w-full pt-6 flex justify-between items-center">
         <view class="flex items-center">
           <image :src="userInfo.avatar" class="w-12 h-12 rounded-full bg-dark" mode="aspectFill" />
-          <view class="ml-2" @click="goTo('/pages/login/index', false)">
+          <view class="ml-2" @click="goTo('/pages/setting/index', true)">
             <view class="text-base font-bold text-black">{{ userInfo.nickname }}</view>
             <view class="text-sm text-gray-500">{{ userInfo.mobile }}</view>
           </view>
@@ -104,6 +104,8 @@ const message = useMessage()
 
 const isSponsor = ref(false)
 
+const isLogined = computed(() => userStore.isLogined)
+
 const headerStyle = computed(() => {
   return {
     height: `${appStore.topBarHeight}px`,
@@ -162,7 +164,7 @@ const onPrivacyContract = () => {
 }
 
 onShow(async () => {
-  if (userStore.isLogined) {
+  if (isLogined.value) {
     const { data } = await checkSponsor()
     isSponsor.value = data.is_sponsor || false
   }
