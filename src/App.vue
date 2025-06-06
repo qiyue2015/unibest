@@ -19,7 +19,7 @@ onShow(async (options) => {
   // #endif
 
   // #ifdef MP-WEIXIN
-  if (userStore.isLogined) {
+  if (userStore.sessionid) {
     await userStore.checkSessionid() // 检查 sessionid
   }
   // 版本更新检查
