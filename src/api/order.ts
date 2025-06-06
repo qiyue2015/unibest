@@ -4,6 +4,25 @@ export const getOrderList = (params: any) => {
   return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=order&op=list', params)
 }
 
+// 提交订单
+export const createOrder = (data: any) => {
+  return http.post<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=order&op=create', data)
+}
+
+// 生成订单支付参数
+export const payOrder = (tid: string) => {
+  return http.post<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=pay', {
+    tid,
+  })
+}
+
+// 支付结果
+export const getPayResult = (tid: string) => {
+  return http.get<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=payResult', {
+    tid,
+  })
+}
+
 // 订单详情
 export const getOrderInfo = (id: string) => {
   return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=order&op=info', { id })
@@ -25,7 +44,6 @@ export const getTicketInfo = (id: string) => {
 }
 
 // 订单下的门票
-// /app/index.php?c=entry&m=basketball&do=order&op=tickets
 export const getOrderTickets = (id: string) => {
   return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=order&op=tickets', { id })
 }

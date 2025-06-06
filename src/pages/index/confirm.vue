@@ -56,7 +56,8 @@
 
 <script lang="ts" setup>
 import { useToast } from 'wot-design-uni'
-import { createOrder, getScheduleDetail, payOrder } from '@/api/app'
+import { getScheduleDetail } from '@/api/app'
+import { createOrder, payOrder } from '@/api/order'
 
 defineOptions({
   name: 'ConfirmOrder',

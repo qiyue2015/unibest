@@ -121,7 +121,7 @@
 <script lang="ts" setup>
 import { useToast } from 'wot-design-uni'
 import { closeOrder, getOrderInfo, getOrderTickets } from '@/api/order'
-import { payOrder } from '@/api/app'
+import { payOrder } from '@/api/order'
 import TicketStatus from '@/components/TicketStatus.vue'
 
 const toast = useToast()
