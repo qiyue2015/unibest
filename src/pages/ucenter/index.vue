@@ -163,11 +163,16 @@ const onPrivacyContract = () => {
   })
 }
 
-onShow(async () => {
-  if (isLogined.value) {
-    const { data } = await checkSponsor()
-    isSponsor.value = data.is_sponsor || false
-  }
+onShow(() => {
+  // 避免 sessionid 检查时页面未加载完成导致 41009 登录
+  setTimeout(async () => {
+    if (isLogined.value) {
+      const { data } = await checkSponsor()
+      isSponsor.value = data.is_sponsor || false
+    } else {
+      isSponsor.value = false
+    }
+  }, 500)
 })
 </script>
 
