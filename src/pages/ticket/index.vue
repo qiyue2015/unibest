@@ -11,7 +11,7 @@
   <view class="h-screen overflow-hidden">
     <template v-if="isLogin">
       <wd-tabs v-model="current" custom-class="m-tabs" auto-line-width swipeable @change="onChange">
-        <block v-for="tab in tabs" :key="tab">
+        <block v-for="tab in tabs" :key="tab.value">
           <wd-tab :title="tab.title" :value="tab.value">
             <wd-status-tip v-if="isEmpty" image="content" tip="暂无相关门票" />
             <block v-for="row in list" :key="row.id">
