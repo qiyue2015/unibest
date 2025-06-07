@@ -81,7 +81,6 @@ const list = ref<any[]>([])
 const fetchData = async () => {
   try {
     uni.showLoading({ title: '加载中...' })
-    console.log('查询条件:', query)
     const { data } = await getMyTicket(query)
     isEmpty.value = data.length === 0
     list.value = data
