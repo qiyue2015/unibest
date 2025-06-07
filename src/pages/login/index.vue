@@ -43,7 +43,7 @@ const onLogin = async () => {
           closed: () =>
             toast.success({
               msg: '登录成功',
-              duration: 500,
+              duration: 1000,
               closed: goBackOrHome,
             }),
         })
