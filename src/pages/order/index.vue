@@ -84,6 +84,7 @@ onLoad((options) => {
 onShow(() => {
   state.value = 'start'
   queryParams.current = 1
+  list.value = []
   fetchData()
 })
 </script>
