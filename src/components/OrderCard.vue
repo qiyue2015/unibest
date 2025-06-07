@@ -11,7 +11,7 @@
         </block>
         <wd-cell size="large" center is-link>
           <text class="text-size-sm text-gray mr-1">实付款</text>
-          <text class="text-size-sm text-rose">¥ {{ order.total_amount }}</text>
+          <text class="text-size-sm text-rose">¥ {{ order.paid_amount }}</text>
         </wd-cell>
       </wd-cell-group>
     </view>
