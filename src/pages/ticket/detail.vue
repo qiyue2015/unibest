@@ -16,17 +16,38 @@
         <text class="cursor-pointer text-blue-500" @click="goOrderDetail">订单详情</text>
       </view>
       <!-- 二维码位置 -->
-      <view class="py-4">
+      <view class="py-4 relative">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
-          <view class="w-38 h-38 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg">
-            <wd-img v-if="ticket.status === 0 && qrcodeUrl" lazy-load custom-class="w-full h-full" :src="qrcodeUrl" />
-            <text v-else class="text-gray-300">二维码不可用</text>
+          <view
+            class="w-38 h-38 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg"
+            :class="{ 'qr-placeholder': ticket.status > 0 }"
+          >
+            <!-- #ifdef MP-WEIXIN -->
+            <canvas v-if="ticket.status === 0" id="ticket-qrcode" type="2d" class="w-38 h-38" />
+            <!-- #endif -->
+            <view v-if="ticket.status === 1" class="w-30 h-30">
+              <wd-img src="/static/images/verified.svg" mode="widthFix" width="100%" height="100%" />
+            </view>
+            <view v-if="ticket.status === 3" class="w-30 h-30">
+              <wd-img src="/static/images/expire.svg" mode="widthFix" width="100%" height="100%" />
+            </view>
           </view>
         </view>
         <view v-if="ticket.status === 0" class="text-size-sm mt-2 text-green-600">二维码实时更新 请勿截屏使用</view>
         <view v-if="ticket.status === 1" class="text-size-sm mt-2 text-gray-400">门票已使用</view>
         <view v-if="ticket.status === 2" class="text-size-sm mt-2 text-orange-500">门票已取消</view>
         <view v-if="ticket.status === 3" class="text-size-sm mt-2 text-red-500">门票已过期</view>
+      </view>
+
+      <view v-if="ticket.status === 1" class="verification-info">
+        <view class="verification-title">
+          <wd-icon name="check-circle-filled" color="#28a745" size="22px"></wd-icon>
+          <text>验票成功</text>
+        </view>
+        <view class="verification-details">
+          <view>核销时间：{{ ticket.verified_at }}</view>
+          <view>核销身份：人工验票</view>
+        </view>
       </view>
 
       <!-- 门票信息 -->
@@ -87,18 +108,19 @@ import { getTicketInfo } from '@/api/order'
 import TicketStatus from '@/components/TicketStatus.vue'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useToast } from 'wot-design-uni'
+import drawQrcode from 'weapp-qrcode-canvas-2d'
 
 const toast = useToast()
 
 const ticketId = ref<string>('')
 const ticket = ref<any>(null)
-const qrcodeUrl = ref<string>('')
 
 const wsMsg = ref('')
 const wsReconnectCount = ref(0)
 const wsFallbackToPolling = ref(false)
 let pollingTimer: ReturnType<typeof setInterval> | null = null
 let refreshTimer: ReturnType<typeof setInterval> | null = null
+let cachedCanvas: any = null
 
 // WebSocket 相关
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
@@ -107,6 +129,7 @@ const { socketConnect, socketClose, socketConnected } = useWebSocket({
       ticket.value.status = msg.payload.status
       // 如果票已核销，关闭 WebSocket 连接
       if (msg.payload.status === 1) {
+        ticket.value.verified_at = msg.payload.verified_at
         toast.success('核销成功')
         socketClose()
       }
@@ -122,10 +145,40 @@ const { socketConnect, socketClose, socketConnected } = useWebSocket({
   },
 })
 
+// 生成二维码
+const generateQrcode = () => {
+  const draw = async (canvas: any) => {
+    await drawQrcode({
+      canvas: canvas,
+      canvasId: 'ticket-qrcode',
+      width: 260,
+      padding: 30,
+      background: '#ffffff',
+      foreground: '#000000',
+      text: ticket.value?.code + Date.now().toString().slice(0, 10),
+    })
+  }
+  if (cachedCanvas) {
+    draw(cachedCanvas)
+    return
+  }
+  wx.createSelectorQuery()
+    .select('#ticket-qrcode')
+    .fields({ node: true, size: true })
+    .exec(async (res) => {
+      if (!res[0] || !res[0].node) {
+        // canvas 未渲染，直接返回，不报错
+        return
+      }
+      cachedCanvas = res[0].node
+      await draw(cachedCanvas)
+    })
+}
+
 // 二维码刷新
 const refreshQrcode = () => {
-  if (ticket.value && ticket.value.qrcode) {
-    qrcodeUrl.value = ticket.value.qrcode + '&t=' + Date.now()
+  if (ticket.value && ticket.value.code) {
+    nextTick(() => generateQrcode())
   }
 }
 
@@ -186,7 +239,6 @@ const fetchData = async () => {
     uni.showLoading({ title: '加载中...' })
     const { data } = await getTicketInfo(ticketId.value)
     ticket.value = data
-    refreshQrcode()
   } finally {
     uni.hideLoading()
   }
@@ -204,7 +256,9 @@ watch(
         wsReconnectCount.value = 0
         await socketConnect({
           module: 'basketball',
-          query: { ticket_id: ticketId.value },
+          query: {
+            ticket_id: ticketId.value,
+          },
         })
       } else {
         startPolling()
@@ -232,6 +286,45 @@ onShow(async () => {
   }
 })
 
-onUnmounted(cleanupAll)
-onUnload(cleanupAll)
+onUnmounted(() => {
+  cleanupAll()
+  cachedCanvas = null
+})
+onUnload(() => {
+  cleanupAll()
+  cachedCanvas = null
+})
 </script>
+
+<style lang="scss" scoped>
+.qr-placeholder {
+  position: relative;
+  background-image: linear-gradient(45deg, #ddd 25%, transparent 25%), linear-gradient(-45deg, #ddd 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ddd 75%), linear-gradient(-45deg, transparent 75%, #ddd 75%);
+  background-size: 10px 10px;
+  background-position:
+    0 0,
+    0 5px,
+    5px -5px,
+    -5px 0px;
+}
+
+.verification-info {
+  @apply text-left rounded-xl overflow-hidden p-4;
+  background: #f8f9fa;
+  border-left: 4px solid #28a745;
+}
+
+.verification-title {
+  @apply flex flex-row items-center gap-2 text-size-base;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.verification-details {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+</style>
