@@ -30,21 +30,27 @@ const goBackOrHome = () => {
 // 用户登录
 const onLogin = async () => {
   if (!agree.value) {
-    const messageOptions = {
-      title: '用户隐私协议须知',
-      msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
-    }
-    message.confirm(messageOptions).then(async () => {
-      agree.value = true
-      uni.showLoading({ title: '登录中' })
-      await userStore.getUserInfo()
-      uni.hideLoading()
-      toast.success({
-        msg: '登录成功',
-        duration: 1000,
-        closed: goBackOrHome,
+    message
+      .confirm({
+        title: '用户隐私协议须知',
+        msg: '请阅读《用户隐私协议》，点击“确认”即视为你已同意。',
       })
-    })
+      .then(async () => {
+        agree.value = true
+        toast.loading({
+          msg: '登录中',
+          duration: 1000,
+          closed: () =>
+            toast.success({
+              msg: '登录成功',
+              duration: 500,
+              closed: goBackOrHome,
+            }),
+        })
+      })
+      .catch(() => {
+        agree.value = false
+      })
     return
   }
 
@@ -104,9 +110,10 @@ const handleOpenPrivacyContract = () => {
 
 onLoad(async () => {
   try {
-    userStore.getUserInfo()
-  } catch (error) {
-    console.error('获取用户信息失败:', error)
+    uni.showLoading({ title: '加载中' })
+    await userStore.getUserInfo()
+  } finally {
+    uni.hideLoading()
   }
 })
 </script>
