@@ -163,16 +163,15 @@ const onPrivacyContract = () => {
   })
 }
 
-onShow(() => {
-  // 避免 sessionid 检查时页面未加载完成导致 41009 登录
-  setTimeout(async () => {
-    if (isLogined.value) {
-      const { data } = await checkSponsor()
-      isSponsor.value = data.is_sponsor || false
-    } else {
-      isSponsor.value = false
-    }
-  }, 500)
+onShow(async () => {
+  try {
+    uni.showLoading({ title: '加载中' })
+    await userStore.getUserInfo()
+    const { data } = await checkSponsor()
+    isSponsor.value = data.is_sponsor || false
+  } finally {
+    uni.hideLoading()
+  }
 })
 </script>
 

@@ -66,5 +66,9 @@ export const receiveTicket = (data: any) => {
 
 // 检查是否为赞助商
 export const checkSponsor = () => {
-  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=sponsor&op=check')
+  return http<any>({
+    url: '/app/index.php?c=entry&a=wxapp&m=basketball&do=sponsor&op=check',
+    method: 'GET',
+    hideErrorToast: true,
+  })
 }
