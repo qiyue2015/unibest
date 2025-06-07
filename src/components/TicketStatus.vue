@@ -15,7 +15,7 @@ const statusMap = {
   0: { text: '未使用', color: 'bg-green-100 text-green-600' },
   1: { text: '已使用', color: 'bg-gray-100 text-gray-400' },
   2: { text: '已取消', color: 'bg-orange-100 text-orange-500' },
-  4: { text: '已过期', color: 'bg-red-100 text-red-500' },
+  3: { text: '已过期', color: 'bg-red-100 text-red-500' },
 }
 
 const statusText = computed(() => {
