@@ -51,7 +51,7 @@
       </view>
 
       <!-- 门票信息 -->
-      <view class="bg-gray-50 rounded-lg mt-4">
+      <view class="bg-gray-50 rounded-lg mt-4" @click="handleTicketInfoClick">
         <view class="flex items-center justify-between mb-2 mx-4 pt-4">
           <view class="center">
             <text class="mr-2">{{ ticket.schedule.date }}</text>
@@ -80,7 +80,7 @@
       </view>
 
       <!-- WebSocket 调试信息演示 -->
-      <view class="mt-4 p-2 bg-gray-50 rounded text-left">
+      <view v-if="showDebugInfo" class="mt-4 p-2 bg-gray-50 rounded text-left">
         <view class="mb-1 text-size-xs text-gray-400">
           通信模式：
           <text :style="{ color: wsFallbackToPolling ? 'orange' : 'green' }">
@@ -121,6 +121,16 @@ const wsFallbackToPolling = ref(false)
 let pollingTimer: ReturnType<typeof setInterval> | null = null
 let refreshTimer: ReturnType<typeof setInterval> | null = null
 let cachedCanvas: any = null
+
+const ticketInfoClickCount = ref(0)
+
+const showDebugInfo = computed(() => {
+  return ticketInfoClickCount.value % 5 === 0 && ticketInfoClickCount.value !== 0
+})
+
+const handleTicketInfoClick = () => {
+  ticketInfoClickCount.value++
+}
 
 // WebSocket 相关
 const { socketConnect, socketClose, socketConnected } = useWebSocket({
