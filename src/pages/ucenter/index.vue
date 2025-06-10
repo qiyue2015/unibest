@@ -166,9 +166,11 @@ const onPrivacyContract = () => {
 onShow(async () => {
   try {
     uni.showLoading({ title: '加载中' })
-    await userStore.getUserInfo()
-    const { data } = await checkSponsor()
-    isSponsor.value = data.is_sponsor || false
+    const userInfo = await userStore.getUserInfo()
+    if (userInfo) {
+      const { data } = await checkSponsor()
+      isSponsor.value = data.is_sponsor || false
+    }
   } finally {
     uni.hideLoading()
   }
