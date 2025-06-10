@@ -42,7 +42,7 @@ export const useUserStore = defineStore(
         const loginRes = await new Promise<{ code: string }>((resolve, reject) => {
           wx.login({
             success: (res) => resolve(res as { code: string }),
-            fail: reject,
+            fail: (err) => reject(err),
           })
         })
         const { code } = loginRes
@@ -53,6 +53,7 @@ export const useUserStore = defineStore(
         setUserInfo(res.data)
         return res.data // 返回获取到的用户信息
       } catch (error) {
+        console.error(error)
         clearUserInfo()
         return null // 失败时返回 null
       }
