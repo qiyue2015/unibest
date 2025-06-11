@@ -130,7 +130,7 @@ onLoad(async () => {
           class="w-20 h-20 bg-white rounded-full"
           mode="aspectFill"
         />
-        <view class="text-gray-500 text-sm mt-2">凉山州蓝球协会</view>
+        <view class="text-gray-500 text-sm mt-2">凉山州篮球协会</view>
       </view>
 
       <view class="mx-20">
