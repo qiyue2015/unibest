@@ -15,6 +15,9 @@ onShow(async (options) => {
   // #ifdef MP-WEIXIN
   if (options.scene) {
     appStore.setScene(options.scene)
+    if (options.scene !== 1154) {
+      checkUpdate() // 版本更新检查
+    }
   }
   // #endif
 
@@ -23,9 +26,6 @@ onShow(async (options) => {
   if (userStore.sessionid) {
     await userStore.checkSessionid()
   }
-
-  // 版本更新检查
-  checkUpdate()
   // #endif
 })
 
