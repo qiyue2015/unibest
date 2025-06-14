@@ -66,7 +66,12 @@
       <view class="rounded-xl overflow-hidden">
         <wd-cell-group title="我的服务" border>
           <wd-grid :gutter="10" :column="4" icon-size="36px" clickable>
-            <wd-grid-item v-if="isSponsor" text="门票发放" use-icon-slot @itemclick="goTo('/pages-sub/sponsor/index', true)">
+            <wd-grid-item
+              v-if="isSponsor"
+              text="门票发放"
+              use-icon-slot
+              @itemclick="goTo('/pages-sub/sponsor/index?promoter_id=' + promoter.id, true)"
+            >
               <template #icon>
                 <image src="/static/tabbar/ticketHL.png" class="slot-img" mode="aspectFill" />
               </template>
@@ -103,8 +108,7 @@ const userStore = useUserStore()
 const message = useMessage()
 
 const isSponsor = ref(false)
-
-const isLogined = computed(() => userStore.isLogined)
+const promoter = ref(null)
 
 const headerStyle = computed(() => {
   return {
@@ -145,6 +149,7 @@ const goTo = (url: any, needLogin = true) => {
   }
 
   // 跳转到指定页面
+  console.log('跳转到:', url)
   uni.navigateTo({ url })
 }
 
@@ -170,6 +175,7 @@ onShow(async () => {
     if (userInfo) {
       const { data } = await checkSponsor()
       isSponsor.value = data.is_sponsor || false
+      promoter.value = data.promoter || null
     }
   } finally {
     uni.hideLoading()
