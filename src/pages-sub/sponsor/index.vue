@@ -29,14 +29,14 @@ const userStore = useUserStore()
 
 const baseUrl = getEnvBaseUrl()
 const uniacid = import.meta.env.VITE_WX_UNIACID
+const promoterId = ref(0)
 const timestamp = ref(Date.now())
 const qrCodeUrl = computed(
-  () => `${baseUrl}/app/index.php?i=${uniacid}&c=entry&a=wxapp&m=basketball&do=gift&op=qrcode&timestamp=${timestamp.value}`,
+  () =>
+    `${baseUrl}/app/index.php?i=${uniacid}&c=entry&a=wxapp&m=basketball&do=gift&op=qrcode&promoter_id=${promoterId.value}&timestamp=${timestamp.value}`,
 )
 
 const isSponsor = ref(false)
-const userInfo = computed(() => userStore.userInfo)
-
 const timer = ref<number | null>(null)
 const countdown = ref(10)
 
@@ -70,6 +70,7 @@ onShow(async () => {
 
   const { data } = await checkSponsor()
   isSponsor.value = data.is_sponsor
+  promoterId.value = data?.promoter?.id || 0
   if (!data.is_sponsor) {
     uni.showToast({ title: '没有权限', icon: 'error', duration: 2000 })
     setTimeout(() => {
