@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import { useToast } from 'wot-design-uni'
 import { useAppStore, useUserStore } from '@/store'
-import { bindPhone, receiveTicket } from '@/api/user'
+import { bindPhone, receivePromoterTicket, receiveTicket } from '@/api/user'
 
 const toast = useToast()
 const appStore = useAppStore()
@@ -31,7 +31,7 @@ const onSubmit = async () => {
     if (valid) {
       try {
         toast.loading({ msg: '正在领取门票，请稍候', duration: 0 })
-        await receiveTicket(formData.value)
+        await receivePromoterTicket(formData.value)
         toast.success({
           msg: '门票领取成功',
           duration: 2000,
@@ -56,7 +56,7 @@ const onRealtimePhone = async ({ detail }) => {
       toast.loading({ msg: '正在领取门票，请稍候', duration: 0 })
       await bindPhone(detail.code)
       await userStore.getUserInfo()
-      await receiveTicket(formData.value)
+      await receivePromoterTicket(formData.value)
       toast.success({
         msg: '门票领取成功',
         duration: 2000,

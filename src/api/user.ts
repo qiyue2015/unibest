@@ -64,6 +64,16 @@ export const receiveTicket = (data: any) => {
   })
 }
 
+// 领取赞助商门票
+export const receivePromoterTicket = (data: any) => {
+  return http({
+    url: '/app/index.php?c=entry&a=wxapp&m=basketball&do=gift&op=promoter_receive',
+    method: 'POST',
+    data: data,
+    hideErrorToast: true,
+  })
+}
+
 // 检查是否为赞助商
 export const checkSponsor = () => {
   return http<any>({
