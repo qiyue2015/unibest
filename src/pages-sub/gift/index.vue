@@ -19,7 +19,7 @@ const EXPIRE_SECONDS = 10 // 二维码超时时间（秒），可随时调整
 const isExpired = ref(false)
 
 const formRef = ref()
-const formData = ref({ realname: '', idcard: '' })
+const formData = ref({ promoter_id: 0, realname: '', idcard: '' })
 
 const userInfo = computed(() => userStore.userInfo)
 const canSubmit = computed(() => formData.value.realname && formData.value.idcard)
@@ -80,7 +80,15 @@ const onRealtimePhone = async ({ detail }) => {
 }
 
 onLoad(async (options) => {
-  const timestamp = Number(decodeURIComponent(options.scene))
+  let timestamp = null
+  if (options.scene && options.scene.includes('-')) {
+    // 分割
+    const parts = options.scene.split('-')
+    formData.value.promoter_id = Number(parts[0])
+    timestamp = Number(parts[1])
+  } else {
+    timestamp = Number(decodeURIComponent(options.scene))
+  }
   const now = Date.now()
   // 判断时间戳单位（秒/毫秒），假设小于1e12为秒，否则为毫秒
   const ts = timestamp < 1e12 ? timestamp * 1000 : timestamp
