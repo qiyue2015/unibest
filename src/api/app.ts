@@ -17,7 +17,7 @@ export const getActivityDetail = (id: number) => {
 
 // 赛事赛程例表
 export const getScheduleList = () => {
-  return http({
+  return http<any>({
     url: '/app/index.php?a=wxapp&c=entry&m=basketball&do=schedule&op=list',
     noAuth: true,
   })
