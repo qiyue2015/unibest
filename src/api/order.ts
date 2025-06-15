@@ -6,7 +6,12 @@ export const getOrderList = (params: any) => {
 
 // 提交订单
 export const createOrder = (data: any) => {
-  return http.post<any>('/app/index.php?a=wxapp&c=entry&m=basketball&do=order&op=create', data)
+  return http<any>({
+    url: '/app/index.php?a=wxapp&c=entry&m=basketball&do=order&op=create',
+    method: 'POST',
+    data: data,
+    hideErrorToast: true,
+  })
 }
 
 // 生成订单支付参数

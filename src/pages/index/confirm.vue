@@ -133,24 +133,31 @@ const onPayOrder = async (order: any) => {
 }
 
 const submitOrder = async () => {
-  toast.loading({
-    msg: '正在创建订单...',
-    direction: 'vertical',
-    duration: 0,
-  })
+  try {
+    toast.loading({
+      msg: '正在创建订单...',
+      direction: 'vertical',
+      duration: 0,
+    })
 
-  const { data } = await createOrder({
-    schedule_id: scheduleId.value,
-    viewers: viewers.value.map((v) => v.id),
-  })
+    const { data } = await createOrder({
+      schedule_id: scheduleId.value,
+      viewers: viewers.value.map((v) => v.id),
+    })
 
-  if (!data.tid) {
-    toast.error({ msg: '订单创建失败，请稍后再试' })
-    return
+    if (!data.tid) {
+      toast.error({ msg: '订单创建失败，请稍后再试' })
+      return
+    }
+
+    await onPayOrder(data)
+    toast.close()
+  } catch ({ data }) {
+    toast.error({
+      msg: data.message || '订单创建失败，请稍后再试',
+      duration: 3000,
+    })
   }
-
-  await onPayOrder(data)
-  toast.close()
 }
 
 onLoad((options) => {
