@@ -60,6 +60,10 @@ const fetchData = async () => {
     const { data } = await getScheduleList()
     isEmpty.value = data.length === 0
     list.value = data
+    nextTick(() => {
+      const defaultActive = data.findIndex((item: any) => item.active)
+      active.value = defaultActive
+    })
   } finally {
     uni.hideLoading()
   }
