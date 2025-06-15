@@ -10,7 +10,7 @@
   <view>
     <wd-img
       src="/static/images/help-qrcode-1.png"
-      preview-src="/static/images/help-qrcode-2.png"
+      preview-src="https://mp-img1.wifixc.com/static/images/help-qrcode-2.png"
       mode="widthFix"
       width="100%"
       height="100%"
