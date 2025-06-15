@@ -41,6 +41,7 @@
 
 <script lang="ts" setup>
 import { getScheduleList } from '@/api/app'
+import { useUserStore } from '@/store'
 
 defineOptions({
   name: 'Home',
@@ -48,6 +49,8 @@ defineOptions({
     styleIsolation: 'shared',
   },
 })
+
+const userStore = useUserStore()
 
 const active = ref(0)
 const isEmpty = ref(false)
@@ -75,8 +78,16 @@ const onOrder = (row: any) => {
   }
 }
 
-onShow(() => {
+onShow(async () => {
   fetchData()
+  if (!userStore.sessionid) {
+    try {
+      uni.showLoading({ title: '加载中' })
+      await userStore.getUserInfo()
+    } finally {
+      uni.hideLoading()
+    }
+  }
 })
 </script>
 
