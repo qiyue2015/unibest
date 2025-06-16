@@ -115,6 +115,14 @@ const goLogin = () => {
 }
 
 onShow(async () => {
+  if (!userStore.sessionid) {
+    try {
+      uni.showLoading({ title: '加载中' })
+      await userStore.getUserInfo()
+    } finally {
+      uni.hideLoading()
+    }
+  }
   if (isLogin.value) {
     list.value = []
     await fetchData()
