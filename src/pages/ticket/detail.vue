@@ -10,6 +10,9 @@
 
 <template>
   <view v-if="ticket" class="h-screen overflow-hidden">
+    <view class="m-4">
+      <wd-notice-bar type="warning" text="请注意：开赛后 20 分钟停止检票，请及时入场" :scrollable="false" />
+    </view>
     <view class="rounded-xl overflow-hidden m-4 p-4 text-center bg-white flex flex-col rounded">
       <view class="text-left text-gray-300 text-size-xs mb-4 flex items-center justify-between">
         <text>票号 {{ ticket.code }}</text>
@@ -33,7 +36,7 @@
             </view>
           </view>
         </view>
-        <view v-if="ticket.status === 0" class="text-size-sm mt-2 text-green-600">二维码实时更新 请勿截屏使用</view>
+        <view v-if="ticket.status === 0" class="text-size-sm mt-2 text-red-500">二维码实时更新 截屏/录屏无法使用</view>
         <view v-if="ticket.status === 1" class="text-size-sm mt-2 text-gray-400">门票已使用</view>
         <view v-if="ticket.status === 2" class="text-size-sm mt-2 text-orange-500">门票已取消</view>
         <view v-if="ticket.status === 3" class="text-size-sm mt-2 text-red-500">门票已过期</view>
