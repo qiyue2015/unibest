@@ -11,7 +11,7 @@
 <template>
   <view v-if="ticket" class="h-screen overflow-hidden">
     <view class="m-4">
-      <wd-notice-bar type="warning" text="请注意：开赛后 20 分钟停止检票，请及时入场" :scrollable="false" />
+      <wd-notice-bar type="warning" text="温馨提示：开赛后 20 分钟停止检票，请及时入场" :scrollable="false" />
     </view>
     <view class="rounded-xl overflow-hidden m-4 p-4 text-center bg-white flex flex-col rounded">
       <view class="text-left text-gray-300 text-size-xs mb-4 flex items-center justify-between">
