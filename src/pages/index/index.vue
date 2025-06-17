@@ -80,14 +80,6 @@ const onOrder = (row: any) => {
 
 onShow(async () => {
   fetchData()
-  if (!userStore.sessionid) {
-    try {
-      uni.showLoading({ title: '加载中' })
-      await userStore.getUserInfo()
-    } finally {
-      uni.hideLoading()
-    }
-  }
 })
 </script>
 
