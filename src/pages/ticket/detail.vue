@@ -11,7 +11,12 @@
 <template>
   <view v-if="ticket" class="h-screen overflow-hidden">
     <view class="m-4">
-      <wd-notice-bar type="warning" text="温馨提示：开赛后 20 分钟停止检票，请及时入场" :scrollable="false" />
+      <wd-notice-bar
+        prefix="warn-bold"
+        type="warning"
+        text="温馨提示：开赛后 20 分钟停止检票，请及时入场"
+        :scrollable="false"
+      />
     </view>
     <view class="rounded-xl overflow-hidden m-4 p-4 text-center bg-white flex flex-col rounded">
       <view class="text-left text-gray-300 text-size-xs mb-4 flex items-center justify-between">
@@ -22,11 +27,11 @@
       <view class="py-4 relative">
         <view class="m-auto rounded-lg" @click="refreshQrcode">
           <view
-            class="w-38 h-38 m-auto flex items-center justify-center text-size-xs bg-gray-100 rounded-lg"
-            :class="{ 'qr-placeholder': ticket.status > 0 }"
+            class="w-38 h-38 m-auto flex items-center justify-center text-size-xs relative bg-gray-100 rounded-lg"
+            :class="{ 'qr-placeholder': ticket.status > 0 || !pageIng }"
           >
             <!-- #ifdef MP-WEIXIN -->
-            <canvas v-if="ticket.status === 0" id="ticket-qrcode" type="2d" class="w-38 h-38" />
+            <canvas v-if="ticket.status === 0 && pageIng" id="ticket-qrcode" type="2d" class="w-38 h-38" />
             <!-- #endif -->
             <view v-if="ticket.status === 1" class="w-30 h-30">
               <wd-img src="/static/images/verified.svg" mode="widthFix" width="100%" height="100%" />
@@ -116,6 +121,7 @@ import drawQrcode from 'weapp-qrcode-canvas-2d'
 const toast = useToast()
 
 const ticketId = ref<string>('')
+const pageIng = ref(false)
 const ticket = ref<any>(null)
 
 const wsMsg = ref('')
@@ -252,6 +258,16 @@ const fetchData = async () => {
     uni.showLoading({ title: '加载中...' })
     const { data } = await getTicketInfo(ticketId.value)
     ticket.value = data
+    startRefreshQrcode()
+    pageIng.value = true
+  } catch ({ data }) {
+    toast.error({
+      msg: data?.message || '获取票据详情失败，请稍后再试',
+      duration: 1500,
+      closed: () => {
+        data.errno === 1001 && uni.navigateBack()
+      },
+    })
   } finally {
     uni.hideLoading()
   }
@@ -276,7 +292,6 @@ watch(
       } else {
         startPolling()
       }
-      startRefreshQrcode()
     }
   },
   { immediate: true },

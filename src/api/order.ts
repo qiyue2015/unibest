@@ -45,7 +45,12 @@ export const getMyTicket = (params: any) => {
 
 // 门票详情
 export const getTicketInfo = (id: string) => {
-  return http.get<any>('/app/index.php?c=entry&a=wxapp&m=basketball&do=ticket&op=detail', { id })
+  return http<any>({
+    method: 'GET',
+    url: '/app/index.php?c=entry&a=wxapp&m=basketball&do=ticket&op=detail',
+    data: { id },
+    hideErrorToast: true,
+  })
 }
 
 // 订单下的门票

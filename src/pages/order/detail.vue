@@ -81,7 +81,12 @@
       </wd-cell-group>
     </view>
     <view v-if="detail.status === 1 || detail.status === 2" class="m-4">
-      <wd-notice-bar type="warning" text="温馨提示：开赛后 20 分钟停止检票，请及时入场" :scrollable="false" />
+      <wd-notice-bar
+        prefix="warn-bold"
+        type="warning"
+        text="温馨提示：开赛后 20 分钟停止检票，请及时入场"
+        :scrollable="false"
+      />
     </view>
     <!-- 购买票品 -->
     <view v-if="detail.status === 1 || detail.status === 2" class="mx-4 mb-4 rounded-xl overflow-hidden min-h-12">
